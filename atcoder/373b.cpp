@@ -210,31 +210,27 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
+    string s;
+    cin>>s;
    
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
-
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
+    int sum=0;
+    unordered_map<char,int>mp;
+    for(int i=0;i<26;i++)
+    {
+        mp[s[i]]=i;
     }
-return 0;
+     int temp=mp['A'];
+    for(int i=0;i<s.size();i++)
+    {
+       sum+=abs(mp[i+'A']-temp);
+       temp=mp[i+'A'];
+      // cout<<sum<<" "<<s[i]-'A'<<endl;
+    }
+    cout<<sum<<endl;
+
+    
+
+
+    
+    return 0;    
 }

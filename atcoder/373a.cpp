@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define nl (int i=0;i<n;i++)
 const int mod=1e9+7;
 
 
@@ -210,31 +209,23 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
-
-        ll count = 0;
-
-        while(n)
+    int n=1;
+    int count=0;
+    while(n<=12)
+    {
+        string s;
+        cin>>s;
+        if(s.size()==n)
         {
-            count+=n%k;
-            n=n/k;
+            ++count;
         }
-
-        cout << count << endl;
+        ++n;
     }
-return 0;
+    cout<<count<<endl;
+
+    
+
+
+    
+    return 0;    
 }

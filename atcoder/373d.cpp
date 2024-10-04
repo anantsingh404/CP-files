@@ -199,10 +199,6 @@ public:
     }
 };
 
-
-
-
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -210,31 +206,28 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
+    ll n,m;
+    cin>>n>>m;
+    vector<pair<ll,ll>adj[n+1];
+    for(int i=0;i<m;i++)
+    {
+        ll x;
+        ll y;
+        ll z;
 
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
+        cin>>x>>y>>z;
+        adj[x].push_back({y,z});
 
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
     }
-return 0;
+    vector<ll>ans(n+1,0);
+    ans[1]=1;
+    vector<ll>vis(n+1,-1);
+    vector<ll>vis(n+1,0);
+    dfs(1,ans,vis,adj)
+
+    
+
+
+    
+    return 0;    
 }

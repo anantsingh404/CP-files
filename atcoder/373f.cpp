@@ -199,7 +199,13 @@ public:
     }
 };
 
-
+ll solve(int idx,vector<vector<ll>>&dp,vector<pair<ll,ll>>&arr)
+{
+    if(i==arr.size())
+    {
+        
+    }
+}
 
 
 
@@ -210,31 +216,23 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
-
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
+    ll n,w;
+    cin>>n>>w;
+    vector<pair<ll,ll>>arr;
+    for(int i=0;i<n;i++)
+    {
+        ll x;
+        ll y;
+        cin>>x>>y;
+        arr.push_back({x,y});
     }
-return 0;
+    vector<vector<ll>>dp(n,vector<ll>(w+1,-1));
+    return solve(0,dp,arr,w);
+
+
+    
+
+
+    
+    return 0;    
 }

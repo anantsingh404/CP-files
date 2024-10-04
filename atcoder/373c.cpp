@@ -210,31 +210,25 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
-
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
+    int n;
+    cin>>n;
+    vector<int>dp(n,0);
+    vector<int>dp1(n,0);
+    for(int i=0;i<n;i++)
+    {
+        cin>>dp[i];
     }
-return 0;
+    for(int i=0;i<n;i++)
+    {
+        cin>>dp1[i];
+    }
+
+    sort(dp.begin(),dp.end());
+    sort(dp1.begin(),dp1.end());
+    cout<<1ll*dp[n-1]+dp1[n-1]<<endl;
+
+
+
+    
+    return 0;    
 }

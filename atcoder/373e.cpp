@@ -210,31 +210,30 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
-
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
+    ll n,m,tvote;
+    cin>>n>>m>>tvote;
+    vector<ll>dp(n,0);
+    multiset<ll>st;
+    for(int i=0;i<n;i++)
+    {
+        cin>>dp[i];
+        st.insert(dp[i]);
     }
-return 0;
+    ll sum=accumulate(dp.begin(),dp.end(),1ll*0);
+    ll rem=tvote-sum;
+    cout<<rem<<endl;
+    vector<ll>ans;
+    for(int i=0;i<n;i++)
+    {
+        ll x=dp[i];
+        st.erase(x);
+
+    }
+
+
+    
+
+
+    
+    return 0;    
 }

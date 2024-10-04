@@ -113,7 +113,7 @@ public:
 
 //longest prefix suffix template
 
-vector<int> computeLPS(string word) {
+vector<int> findlps(string word) {
     int n = word.length();
     vector<int> lps(n, 0); 
     int len = 0; 
@@ -210,31 +210,72 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-   
-ll t;
-    cin >> t;
-    while (t--) {
-        ll n, k;
-        cin >> n >> k;
-
-        if (k == 1) {
-            cout << n << endl;
-            continue;
+    string s,p;
+    cin>>s>>p;
+    int n=s.size();
+    int m=p.size();
+    vector<int>lpp=findlps(p);
+    string z=p;
+    reverse(z.begin(),z.end());
+    vector<int>lps=findlps(z);
+    reverse(lps.begin(),lps.end());
+    vector<int>prefix(n,0);
+     vector<int>sufix(n,0);
+      int i =0;
+        int j =0;
+        while(i<n){
+            
+            if(p[j]==s[i]){
+                prefix[i]=j+1;
+                i++;j++;
+            }
+            
+            else if(i<n and s[i]!=p[j]){
+                if(j==0){
+                    i++;
+                }
+                else {
+                    j=lpp[j-1];
+                }
+            }
         }
-        if (n < k) {
-            cout << n << endl;
-            continue;
+        i=n-1;
+        j=m-1;
+        while(i>=0){
+            
+            if(p[j]==s[i]){
+                sufix[i]=j-1;
+                i--;j--;
+            }
+            
+            else if(i>=0 and s[i]!=p[j]){
+                if(j==0){
+                    i--;
+                }
+                else {
+                    j=lps[j+1];
+                }
+            }
         }
-
-        ll count = 0;
-
-        while(n)
+        int ans=0;
+        for(int i=0;i<n;i++)
         {
-            count+=n%k;
-            n=n/k;
+            if(prefix[i]+sufix[i]>=m-1)
+            {
+                ans=i-prefix[i]+1;
+                break;
+            }
         }
+        cout<<ans<<endl;
 
-        cout << count << endl;
-    }
-return 0;
+
+
+
+
+
+    
+
+
+    
+    return 0;    
 }
