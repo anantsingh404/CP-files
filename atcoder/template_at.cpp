@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define nl (int i=0;i<n;i++)
+#define loop (int i=0;i<n;i++)
 const int mod=1e9+7;
 
 

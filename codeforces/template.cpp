@@ -211,30 +211,12 @@ int main() {
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
    
-ll t;
+     ll t;
     cin >> t;
     while (t--) {
-        ll n, k;
-        cin >> n >> k;
+        
 
-        if (k == 1) {
-            cout << n << endl;
-            continue;
-        }
-        if (n < k) {
-            cout << n << endl;
-            continue;
-        }
 
-        ll count = 0;
-
-        while(n)
-        {
-            count+=n%k;
-            n=n/k;
-        }
-
-        cout << count << endl;
     }
 return 0;
 }

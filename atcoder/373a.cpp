@@ -209,17 +209,17 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-    int n=1;
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
     int count=0;
-    while(n<=12)
+    for(int i=1;i<n-1;i++)
     {
-        string s;
-        cin>>s;
-        if(s.size()==n)
+        if(s[i-1]=='#' && s[i+1]=='#' && s[i]=='.')
         {
             ++count;
         }
-        ++n;
     }
     cout<<count<<endl;
 

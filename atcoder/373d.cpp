@@ -206,24 +206,56 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-    ll n,m;
-    cin>>n>>m;
-    vector<pair<ll,ll>adj[n+1];
-    for(int i=0;i<m;i++)
+   
+
+string s;
+cin>>s;
+int n=s.size();
+vector<vector<int>>left(n,vector<int>(26,0));
+vector<vector<int>>right(n,vector<int>(26,0));
+for(int i=0;i<n;i++)
+{  
+   
+    if(i>0)
     {
-        ll x;
-        ll y;
-        ll z;
-
-        cin>>x>>y>>z;
-        adj[x].push_back({y,z});
-
+        for(int j=0;j<26;j++)
+        {
+            left[i][j]=left[i-1][j];
+        }
+        left[i][s[i]-'A']=left[i][s[i]-'A']+1;
     }
-    vector<ll>ans(n+1,0);
-    ans[1]=1;
-    vector<ll>vis(n+1,-1);
-    vector<ll>vis(n+1,0);
-    dfs(1,ans,vis,adj)
+     else
+    {
+        left[i][s[i]-'A']=1;
+    }
+}
+for(int i=n-1;i>=0;i--)
+{
+    if(i<n-1)
+
+    {
+        for(int j=0;j<26;j++)
+        {
+            right[i][j]=right[i+1][j];
+        }
+            right[i][s[i]-'A']=right[i][s[i]-'A']+1;
+    }
+    else
+    {
+        right[i][s[i]-'A']=1;
+    }
+}
+
+long long ans=0;
+for(int i=1;i<n-1;i++)
+{
+    for(int j=0;j<26;j++)
+    {
+        ans+=1ll*left[i-1][j]*right[i+1][j];
+    }
+}
+cout<<ans<<endl;
+
 
     
 

@@ -1,11 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
-#define nl (int i=0;i<n;i++)
-const int mod=1e9+7;
 
 
 
+/*
 
 //trie template
 class trienode {
@@ -200,35 +198,111 @@ public:
 };
 
 
+const int INF = 1e9;  // A large number to represent infinity
+int N, M, Q;
+vector<vector<pair<int, int>>> adj;  // Adjacency list (city, distance)
+set<int> closed_roads;  // Set to keep track of closed roads
+vector<tuple<int, int, int>> roads;  // Store roads (A, B, C)
 
+void dijkstra(int start, vector<int>& distances) {
+    distances.assign(N + 1, INF);  // Initialize distances to infinity
+    distances[start] = 0;  // Distance from start to itself is 0
 
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, start});  // {distance, city}
 
+    while (!pq.empty()) {
+        auto [curr_dist, u] = pq.top();
+        pq.pop();
+
+        if (curr_dist > distances[u]) continue;  // If we have already found a shorter path
+
+        for (const auto& [v, weight] : adj[u]) {
+            if (closed_roads.count((u << 16) | v) || closed_roads.count((v << 16) | u)) {
+                continue;  // Skip closed roads
+            }
+            if (curr_dist + weight < distances[v]) {
+                distances[v] = curr_dist + weight;
+                pq.push({distances[v], v});
+            }
+        }
+    }
+}
+*/
+int dp[100][501][501];
+int n;
+int sum;
+vector<pair<int,int>>vp;
+int solve(int idx,int sum1,int sum2)
+{
+    if(idx>=n && sum1==sum/3 && sum2==sum/3)
+    {
+        return 0;
+    }
+    if(idx>=n || sum1>sum/3 || sum2>sum/3)
+    {
+        return INT_MAX;
+    }
+    if(dp[idx][sum1][sum2]!=-1)
+    {
+        return dp[idx][sum1][sum2];
+    }
+    long long ans=INT_MAX;
+    if(vp[idx].first==1)
+    {
+        ans=min(ans,1ll*solve(idx+1,sum1+vp[idx].second,sum2));
+        ans=min(ans,1ll*1+solve(idx+1,sum1,sum2+vp[idx].second));
+        ans=min(ans,1ll*1+solve(idx+1,sum1,sum2));
+    }
+    if(vp[idx].first==2)
+    {
+        ans=min(ans,1ll*1+solve(idx+1,sum1+vp[idx].second,sum2));
+        ans=min(ans,1ll*solve(idx+1,sum1,sum2+vp[idx].second));
+        ans=min(ans,1ll*1+solve(idx+1,sum1,sum2));
+    }
+     if(vp[idx].first==3)
+    {
+        ans=min(ans,1ll*1+solve(idx+1,sum1+vp[idx].second,sum2));
+        ans=min(ans,1ll*1ll*1+solve(idx+1,sum1,sum2+vp[idx].second));
+        ans=min(ans,1ll*solve(idx+1,sum1,sum2));
+    }
+    return dp[idx][sum1][sum2]=ans;
+
+}
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    //Trie trie;
-    //dsu dset(n);
-    //vector<int> lps = computeLPS(string);
-    //SegmentTree segTree(array);
-    int n;
-    cin>>n;
-    vector<int>dp(n,0);
-    vector<int>dp1(n,0);
-    for(int i=0;i<n;i++)
-    {
-        cin>>dp[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>dp1[i];
-    }
-
-    sort(dp.begin(),dp.end());
-    sort(dp1.begin(),dp1.end());
-    cout<<1ll*dp[n-1]+dp1[n-1]<<endl;
-
-
-
     
-    return 0;    
+    cin>>n;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<501;j++)
+        {
+            for(int k=0;k<501;k++)
+            {
+                dp[i][j][k]=-1;
+            }
+        }
+    }
+    //int sum=0;
+    
+    for(int i=0;i<n;i++)
+    {
+        int x;
+        int y;
+        cin>>x;
+        cin>>y;
+        sum+=y;
+        vp.push_back({x,y});
+    }
+    if(sum%3)
+    {
+        cout<<-1<<endl;
+    }
+    else{
+        int x=solve(0,0,0);
+        if(x>=INT_MAX)
+        {
+            x=-1;
+        }
+        cout<<x<<endl;
+    }
 }

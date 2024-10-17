@@ -210,27 +210,35 @@ int main() {
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
-    string s;
-    cin>>s;
-   
-    int sum=0;
-    unordered_map<char,int>mp;
-    for(int i=0;i<26;i++)
-    {
-        mp[s[i]]=i;
-    }
-     int temp=mp['A'];
-    for(int i=0;i<s.size();i++)
-    {
-       sum+=abs(mp[i+'A']-temp);
-       temp=mp[i+'A'];
-      // cout<<sum<<" "<<s[i]-'A'<<endl;
-    }
-    cout<<sum<<endl;
-
+      int n;
+    cin >> n;
+    vector<pair<ll, ll>> vp; // Use long long for large values
     
-
-
+    for (int i = 0; i < n; i++) {
+        ll x, y; // Change to long long
+        cin >> x >> y;
+        vp.push_back({x, y});
+    }
     
-    return 0;    
+    double ans = 0.0;
+    
+    for (int i = 0; i < n - 1; i++) {
+        ll x = vp[i].first;
+        ll y = vp[i].second;
+        ll x1 = vp[i + 1].first;
+        ll y1 = vp[i + 1].second;
+        
+        // Make sure to use long long in the calculations
+        ans += sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+    }
+    
+    // Distance to the origin from the first point
+    ans += sqrt(vp[0].first * vp[0].first + vp[0].second * vp[0].second);
+    
+    // Distance to the origin from the last point
+    ans += sqrt(vp[n - 1].first * vp[n - 1].first + vp[n - 1].second * vp[n - 1].second);
+    
+    cout << fixed << setprecision(20) << ans << endl; // Output with 15 decimal places
+    
+    return 0;
 }

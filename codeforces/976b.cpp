@@ -221,7 +221,14 @@ int main() {
       {
         long long mid=mini+(maxi-mini)/2;
         long long temp=sqrt(mid);
-
+        while(temp*temp>mid)
+        {
+            --temp;
+        }
+        while(((temp+1)*(temp+1))<=mid)
+        {
+            ++temp;
+        }
 
         if((mid-temp)>=k)
         {
