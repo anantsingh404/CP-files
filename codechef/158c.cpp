@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -352,63 +352,24 @@ int main() {
     cin >> t;
     while (t--) {
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
+int n;
+cin>>n;
+set<ll>st;
+for(int i=0;i<n;i++)
+{
+    ll x;
+    cin>>x;
+    while(!st.empty() && st.find(x)!=st.end())
     {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
-        }
+        st.erase(x);
+        x+=x;
     }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+    st.insert(x);
+    int y=st.size();
+    cout<<y<<" ";
+}
+cout<<endl;
+
 
 
     }

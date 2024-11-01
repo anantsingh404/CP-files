@@ -1,8 +1,8 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define pair pair<int,int>
-#define loop for(int i=0;i<n;i++)
+//#define pair pair<int,int>
+//#define loop for(int i=0;i<n;i++)
 #define twovector vector<vector<int>> 
 #define pqmin priority_queue<int,vector<int>,greater<int>>
 #define pqmax priority_queue<int>
@@ -351,65 +351,38 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
+        int n;
+        cin>>n;
+        vector<ll>dp1(n,0);
+        vector<ll>dp2(n,0);
+        for(int i=0;i<n;i++)
+        {
+            cin>>dp1[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            cin>>dp2[i];
+        }
+        vector<pair<ll,ll>>vp;
+        ll res=0;
+        for(int i=0;i<n;i++)
+        {
+            vp.push_back({dp1[i]-dp2[i],dp2[i]});
+            res+=vp[i].second;
+        }
+        sort(vp.begin(),vp.end());
+        ll ans=0;
+        ans=res;
+        ll x=res+vp[0].first;
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
+       
+        for(int i=1;i<n;i++)
         {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
+            x+=vp[i].first;
+            ans=min(ans,x);
         }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
-
+        cout<<ans<<endl;
+      
 
     }
 return 0;

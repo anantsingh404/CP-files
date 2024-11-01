@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -337,7 +337,14 @@ public:
 };
 
 */
-
+int fact(int n)
+{   
+     if (n==1)
+{
+    return 1;
+}  
+  return n*fact(n-1);
+}
 
 
 int main() {
@@ -351,66 +358,37 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
+        ll n;
+        cin>>n;
+        vector<ll>dp(n,0);
+        for(int i=0;i<n;i++)
+        {
+            cin>>dp[i];
+        }
+         ll ans=dp[0];
+         for(int i=1;i<n;i++)
+         {
+            ans=ans&dp[i];
+         }
+         ll x=(1ll<<32);
+
+         ll count=0;
+         ll i=1;
+         while(i<=x){
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
+
+            if(ans&i)
+            {
+                count=count+i;
+            }
+            i=i*2;
+         }
+       
+  cout<<count<<endl;
         }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+        
 
 
-    }
+    
 return 0;
 }

@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -348,69 +348,83 @@ int main() {
     //vector<int> lps = computeLPS(string);
     //SegmentTree segTree(array);
    
-     ll t;
-    cin >> t;
-    while (t--) {
-        
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
-        }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+    
+          
+         int n,m;
+         cin>>n>>m;
+          int ans=0;
+          int left=1;
+          int right=2;
+          while(m--)
+          {
+char x;
+int move;
+cin>>x>>move;
+if(x=='R'){
+    int temp=1;
+    int count=0;
+  for(int i=1;i<right;i++)
+  {  if(i==left)
+  {
+    temp=0;
+  }
+    ++count;
 
-
+  }
+  count+=(1+n-left);
+  int temp2=0;
+  int count2=abs(move-right);
+  for(int i=min(move,right);i<max(move,right);i++)
+  {
+    if(i==left)
+    {
+        temp2=0;
     }
+  }
+  if(temp)
+  {
+    ans+=count;
+
+  }
+  else{
+    ans+=count1;
+  }
+  right=move;
+
+}
+if(x=='L'){
+    int temp=1;
+    int count=0;
+  for(int i=1;i<left;i++)
+  {  if(i==right)
+  {
+    temp=0;
+  }
+    ++count;
+
+  }
+  count+=(1+n-left);
+  int temp2=0;
+  int count2=abs(move-left);
+  for(int i=min(move,left);i<max(move,left);i++)
+  {
+    if(i==right)
+    {
+        temp2=0;
+    }
+  }
+  if(temp1)
+  {
+    ans+=count;
+
+  }
+  else{
+    ans+=count1;
+  }
+  left=move;
+          }
+          cout<<ans<<endl;
+
+    
 return 0;
 }

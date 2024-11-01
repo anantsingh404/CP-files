@@ -9,18 +9,48 @@ int main() {
     cin.tie(nullptr);
     
     //write your code here
-    ll t;
-    cin>>t;
-    while(t--)
+    int n;
+    vector<int>dp(n,0);
+    multiset<int>dp1;
+    for(int i=0;i<n;i++)
     {
-      
-    ll n;
-    cin>>n;
-    
-
-
-
+        cin>>dp[i];
     }
+     for(int i=0;i<n-1;i++)
+    {
+        int x;
+        cin>>x;
+        dp1.insert(x);
+    }
+    sort(dp.begin(),dp.end());
+    sort(dp1.begin(),dp1.end());
+   // multiset<int>x;
+   int count=0;
+   int size=0;
+    for(int i=n-1;i>=0;i--)
+    {
+        auto x=dp1.lower_bound(dp[i]);
+        if(x!=dp1.end())
+        {
+          dp1.erase(x);
+        }
+        else{
+            ++count;
+            mini=dp[i];
+        }
+        if(count==2)
+        {
+            break;
+        }
+    }
+    if(count==2)
+    {
+        cout<<-1<<endl;
+    }
+    else{
+        cout<<mini<<endl;
+    }
+
     
 
 

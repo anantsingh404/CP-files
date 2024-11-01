@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -352,64 +352,52 @@ int main() {
     cin >> t;
     while (t--) {
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
-        }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+       int n;
+       cin>>n;
+       vector<int>dp(n,0);
+       for(int i=0;i<n;i++)
+       {
+        cin>>dp[i];
+       }
+       int nc=0;
+       for(int i=0;i<n;i++)
+       {
+         int countone=0;
+         int counttwo=0;
+         for(int j=i;j<n;j++)
+         {
+            if(dp[j]==1)
+            {
+                ++countone;
 
+            }
+            else{
+                ++counttwo;
+            }
+            int x=countone+counttwo;
+            if(x==0)
+            {
+                continue;
+            }
+            int median=0;
+            double mean=(double)(countone+2*counttwo)/x;
+            if(x%2==1)
+            {
+                median=(countone>0)?1:2;
+
+            }
+            else{
+                median=(countone>=1)?1:2;
+            }
+            if(mean==median)
+            {
+                ++nc;
+            }
+         }
+
+
+       }
+       cout<<nc<<endl;
 
     }
 return 0;

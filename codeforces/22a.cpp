@@ -2,7 +2,22 @@
 using namespace std;
 #define ll long long
 const int mod=1e9+7;
-
+int maxXor(int lo,int hi,int k)
+{
+    int ans=0;
+    for(int i=lo;i<hi;i++)
+    {
+        for(int j=(i+1);j<=hi;j++)
+        {
+            int x=i^j;
+            if(x<=k)
+            {
+                ans=max(ans,x);
+            }
+        }
+    }
+    return ans;
+}
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -11,19 +26,9 @@ int main() {
     while(t--)
     {
        
-    int n;
-    cin>>n;
-    vector<int>dp(n);
-    int ans=-1;
-    for(int i=0;i<n;i++)
-    {
-        cin>>dp[i];
-        if(i%2==0)
-        {
-            ans=max(ans,dp[i]);
-        }
-    }
-    cout<<ans<<endl;
+    int l,h,k;
+    cin>>l>>h>>k;
+    cout<<maxXor(l,h,k);
 
 
     

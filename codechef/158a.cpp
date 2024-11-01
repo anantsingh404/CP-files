@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -351,64 +351,97 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
+        int n;
+        cin>>n;
+        string s;
+        cin>>s;
+       
+        int ans=1;
+        int ac=0;
+        int bcc=0;
+        for(int i=0;i<n;i++)
+        {
+            if(s[i]=='a')
+            {
+                ++ac;
+            }
+            else{
+                ++bcc;
+            }
+        }
+        int count=1;
+        for(int i=0;i<n;i++)
+        {
+            if(s[i]==s[i-1])
+            {
+                ++count;
+                 ans=max(ans,count);
+            }
+            else{
+                count=1;
+            }
+           
+        }
+        if(ac==0 || bcc==0)
+        {
+            cout<<n<<endl;
+            continue;
+        }
+       // int n.size();
+       int start=-1;
+       int end=-1;
+       int bc=0;
+       int bstart=-1;
+        for(int i=0;i<n;i++)
+        {
+        if(s[i]=='a' && start==-1)
+        {
+            start=i;
+        }
+        if(s[i]=='a')
+        {
+            end=i;
+        }
+        if(s[i]=='b' && i>start && bstart==-1)
+        {
+            ++bc;
+            bstart=i;
+
+        }
+        }
+        if(start!=-1 && bstart!=-1 && bstart<end)
+        {
+          ans=max(ans,end-start+1);
+        }
+         start=-1;
+       end=-1;
+       bc=0;
+       bstart=-1;
+         for(int i=0;i<n;i++)
+        {
+        if(s[i]=='b' && start==-1)
+        {
+            start=i;
+        }
+        if(s[i]=='b')
+        {
+            end=i;
+        }
+        if(s[i]=='a' && i>start && bstart==-1)
+        {
+            ++bc;
+            bstart=i;
+
+        }
+        }
+        if(start!=-1 && bstart!=-1 && bstart<end)
+        {
+          ans=max(ans,end-start+1);
+        }
+
+      cout<<ans<<endl;
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
-        }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+
 
 
     }

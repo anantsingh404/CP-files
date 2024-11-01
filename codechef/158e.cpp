@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
@@ -7,7 +7,7 @@ using namespace std;
 #define pqmin priority_queue<int,vector<int>,greater<int>>
 #define pqmax priority_queue<int>
 
-const int mod=1e9+7;
+//const int mod=1e9+7;
 
 
 
@@ -338,8 +338,20 @@ public:
 
 */
 
+ll mod=998244353;
 
-
+ll pow(ll base,ll expo)
+{    if(expo==0)
+{
+    return 1;
+}
+    ll x=pow(base,expo/2)%mod;
+    if(expo%2)
+    {
+        return (((x%mod)*(x%mod))%mod*(base%mod))%mod;
+    }
+    return ((x%mod)*(x%mod))%mod;
+}
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -351,64 +363,32 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
-        
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
-        }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(j<m)
-        {
-            dp[i-1][j]=3;
-            j++;
-        }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+      ll n,m,k;
+      cin>>n>>m>>k;
+      vector<ll>dp;
+      ll i=1;
+      while(i<k)
+      {
+        dp.push_back(i);
+        i++;
+      }
+      while(dp.size()<n)
+
+     {
+        dp.push_back(i);
+     } 
+     ll ans=1;
+     ll count=m;
+     for(int i=1;i<n;i++)
+     {  if(dp[i]!=dp[i-1])
+     {
+        ++ans;
+     }
+        count+=pow(ans,m);
+     } 
+     cout<<count<<endl;
+
+
 
 
     }

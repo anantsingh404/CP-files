@@ -1,11 +1,11 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define pair pair<int,int>
-#define loop for(int i=0;i<n;i++)
-#define twovector vector<vector<int>> 
-#define pqmin priority_queue<int,vector<int>,greater<int>>
-#define pqmax priority_queue<int>
+
+//#define twovector vector<vector<int>> 
+//#define pqmin priority_queue<int,vector<int>,greater<int>>
+//#define pqmax priority_queue<int>
 
 const int mod=1e9+7;
 
@@ -352,65 +352,52 @@ int main() {
     cin >> t;
     while (t--) {
         
-      int n,m;
-   cin>>n>>m;
-   vector<vector<int>>dp(n,vector<int>(m,2));
-    if(n==m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
+      int n;
+      cin>>n;
+      vector<int>dp(n,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>dp[i];
+      }
+      vector<pair>vp;
+      bool flag=false;
+      while(true)
+      {
+        vector<int>temp=dp;
+        sort(temp.begin(),temp.end());
+        if(dp==temp)
         {
-            dp[i][j]=3;
-            i++;
-            j++;
-            
+            flag=true;
+            break;
         }
-    }
-    else if(n<m)
-    {
-        int i=0;
-        int j=0;
-        while(i<n)
+        if(dp.size()<=2)
         {
-            dp[i][j]=3;
-            i++;
-            j++;
+            break;
         }
-        while(j<m)
+        vp.push_back({1,3});
+        vector<int>flagg(dp.begin(),dp.begin()+3);
+        vector<int>flagg2=flagg;
+        sort(flagg2.begin(),flagg2.end());
+        int med=flagg2[1];
+        int idx=find(flagg.begin(),flagg.end(),med)-flagg.begin();
+        dp.erase(dp.begin()+idx);
+      }
+      if(flag==false)
+      {
+        cout<<-1<<endl;
+      }
+      else{
+      
+        cout<<vp.size()<<endl;
+        for(int i=0;i<vp.size();i++)
         {
-            dp[i-1][j]=3;
-            j++;
+            cout<<vp[i].first<<" "<<vp[i].second<<endl;
         }
-    }
-    else 
-    {
-        int i=0;
-        int j=0;
-        while(j<m)
-        {
-            dp[i][j]=3;
-            i++;
-            j++;
-        }
-        while(i<n)
-        {
-            dp[i][j-1]=3;
-            i++;
-        }
-    }
-   for(int i=0;i<n;i++)
-   {
-    for(int j=0;j<m;j++)
-    {
-        cout<<dp[i][j]<<" ";
-    }
-    cout<<endl;
-   }
-   //cout<<en
-   
+      }
 
 
+
+      
     }
 return 0;
 }
