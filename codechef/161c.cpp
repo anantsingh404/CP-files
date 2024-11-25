@@ -342,14 +342,65 @@ int main() {
     //Trie trie;
     //dsu dset(n);
     //vector<int> lps = computeLPS(string);
-    //SegmentTree segTree(array);
+    //SegmentTree segTree(dpay);
    
-     ll t;
+    ll t;
     cin >> t;
     while (t--) {
-        
+         ll n, c;
+        cin >> n >> c;
 
+        vector<int>dp(n,0);
+        for(int i=0;i<n;i++)
+        {
+            cin>>dp[i];
+        }
 
+        int f = dp[0];
+        int g = dp[0];
+        ll h = 0;
+        for (int i=0;i<n;i++)
+         {
+            f = min(f, dp[i]);
+            g = max(g, dp[i]);
+        }
+       ll i = max(0,g - f);
+       
+
+        while (h < i) 
+        {
+            ll j = (h + i) / 2;
+            int count= 1;
+            ll l = dp[0] - j;
+            ll m = dp[0] + j;
+
+            for (int e = 1; e < n; e++) {
+                if(l<dp[e]-j)
+                {
+                    l=dp[e]-j;
+                }
+                if(m>dp[e]+j)
+                {
+                    m=dp[e]+j;
+                }
+                if (l > m)
+                 {
+                    count++;
+                    l = dp[e]-j;
+                    m = dp[e]+j;
+                }
+            }
+
+            if (count <= c + 1)
+             {
+                i = j;
+            } else 
+            {
+                h = j + 1;
+            }
+        }
+
+        cout<<h<<endl;
     }
-return 0;
+    return 0;
 }

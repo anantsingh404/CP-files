@@ -347,7 +347,42 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
-        
+        int n;
+         cin>>n;
+         ll sum=0;
+    vector<int>dp(n,0);
+    for (int i = 0; i < n; i++)
+     {
+        cin >> dp[i];
+     }
+    for(int i=0;i<n;i++)
+    {
+        if(dp[i]==(i+1))
+        {
+            ++sum;
+        }
+    }
+
+    if (sum==n) 
+    {
+
+        cout<<n<<endl;
+    } 
+    else if (sum>=1) 
+    {
+        cout<<n-1<<endl;
+    } 
+    else 
+    {
+        if (n > 2) 
+        {
+            cout<<n-2<<endl;
+        }
+         else
+        {
+            cout<<0<<endl;
+        }
+    } 
 
 
     }

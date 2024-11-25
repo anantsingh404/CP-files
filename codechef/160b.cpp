@@ -347,7 +347,39 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
-        
+    
+    int b;
+    cin >> b;
+
+    vector<int> c(b);
+    for (int i = 0; i < b; ++i) {
+        cin >> c[i];
+    }
+
+    int d = 0; 
+    for (int i = 0; i < b-1; ++i) {
+        if (c[i] == 1)
+        {
+             d++;
+        }
+    }
+
+    int e = 0; 
+    for (int i = 1; i < b; ++i) {
+        if (c[i] == 0)
+        { 
+            e++;
+        }
+    }
+    int f=b-1;
+    if(d+e<f)
+    {
+        f=d+e;
+    }
+  
+   
+
+    cout << f+b << endl;
 
 
     }

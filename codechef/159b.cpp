@@ -1,8 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define pair pair<int,int>
+#define loop for(int i=0;i<n;i++)
+#define twovector vector<vector<int>> 
 #define pqmin priority_queue<int,vector<int>,greater<int>>
 #define pqmax priority_queue<int>
+
 const int mod=1e9+7;
 
 
@@ -347,7 +351,33 @@ int main() {
      ll t;
     cin >> t;
     while (t--) {
+       ll n,k;
+       cin>>n>>k;
+       ll count=0;
+       ll sums;
+       ll div=2;
+       while(n>1)
+       {
+        if(n%div==0)
+        {
+            ++count;
+            n=n/div;
+        }
+        else{
+            ++div;
+        }
+    
+       } 
+       // cout<<count<<endl;
+       
+       //cout<<count<<endl;
+       
+       ll x=floor(log2(k));
+       //cout<<x<<endl;
+       cout<<x+count<<endl;
+
         
+       
 
 
     }

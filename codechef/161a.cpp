@@ -348,7 +348,66 @@ int main() {
     cin >> t;
     while (t--) {
         
+int n;
+cin>>n;
+vector<int>vp;
+vector<int>dp(n,0);
+vector<int>dp1(n,0);
+int maxi=0;
+int maxidx=-1;
+int l=0;
+int li=-1;
+int sl=0;
+int sli=-1;
+for(int i=0;i<n;i++)
+{
+cin>>dp[i];
+//vp.push_back(dp[i]);
+}
+for(int i=0;i<n;i++)
+{
+cin>>dp1[i];
+//vp.push_back(dp1[i]);
+}
 
+
+for(int i=0;i<n;i++)
+{
+    int x=max(dp[i],dp1[i]);
+    if(x>maxi)
+    {
+        maxi=x;
+        maxidx=i;
+    }
+}
+for(int i=n-1;i>=0;i--)
+{
+    int x=dp[i];
+    if(x>l)
+    {   sl=l;
+        sli=li;
+        l=x;
+       
+        li=i;
+        
+    }
+    else if(x>sl)
+    {
+        sl=x;
+        sli=i;
+    }
+
+
+}
+int x=max(dp[li],dp1[li]);
+int y=max(dp[sli],dp1[sli]);
+if(x!=y || maxi!=x)
+{
+    cout<<"Yes"<<endl;
+}
+else{
+    cout<<"No"<<endl;
+}
 
     }
 return 0;
