@@ -1,278 +1,95 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cmath>
+
 using namespace std;
-#define ll long long
-#define loop (int i=0;i<n;i++)
-const int mod=1e9+7;
 
-
-
-
-//trie template
-class trienode {
-public:
-    trienode* child[26];
-    bool isleaf;
-
-    trienode() {
-        for (int i = 0; i < 26; i++) {
-            child[i] = NULL;
-        }
-        isleaf = false;
-    }
+vector<pair<int, vector<char>>> segPatterns = {
+    {92229, {'A', 'D'}}, {93339, {'B'}}, {92222, {'C', 'F'}}, {93333, {'E'}}, {92336, {'G'}},
+    {91119, {'H', 'N', 'U'}}, {22322, {'I'}}, {62229, {'J'}}, {92226, {'K'}}, {91111, {'L'}},
+    {91519, {'M', 'W'}}, {72227, {'O'}}, {92225, {'P'}}, {92339, {'Q'}}, {93336, {'R'}},
+    {63336, {'S'}}, {11911, {'T'}}, {71117, {'V'}}, {22122, {'X'}}, {62226, {'Y'}}, {23332, {'Z'}}
 };
 
-class Trie {
-public:
-    trienode* root;
-
-    Trie() {
-        root = new trienode();
-    }
-
-    void insert(string word) {
-        trienode* node = root;
-        int n=word.size();
-        for (int i = 0; i < n; i++) {
-            int index = word[i] - 'a';
-            if (node->child[index] == NULL) {
-                node->child[index] = new trienode();
-            }
-            node = node->child[index];
+char decodeSegment(int pos, const vector<string>& led) {
+    string segValue = "";
+    for (int i = 0; i < 5; i++) {
+        int sum = 0;
+        for (int j = 0; j < 9; j++) {
+            sum += led[j][pos + i] - '0';
         }
-        node->isleaf = true;
+        segValue += to_string(sum);
     }
+    int segmentKey = stoi(segValue);
 
-    bool search(string word) {
-        trienode* node = root;
-        for (int i = 0; i < word.size(); i++) {
-            int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
-            node = node->child[index];
-        }
-        return node->isleaf;
-    }
-
-    bool startsWith(string word) {
-        trienode* node = root;
-        for (int i = 0; i < word.length(); i++) {
-            int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
-            node = node->child[index];
-        }
-        return true;
-    }
-
-    
-};
-
-
-//Disjoint set template
-
-class dsu {
-private:
-    vector<int> parent;
-    vector<int> rank;
-
-public:
-    dsu(int n) {
-        parent.resize(n);
-        rank.resize(n, 0);
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
-        }
-    }
-
-    int find(int u) {
-        if (parent[u] != u) {
-            parent[u] = find(parent[u]); 
-        }
-        return parent[u];
-    }
-
-    void join(int u, int v) {
-        int x = find(u);
-        int y = find(v);
-
-        if (x != y) {
-            if (rank[x] > rank[y]) {
-                parent[y] = x;
-            } else if (rank[x] < rank[y]) {
-                parent[x] = y;
-            } else {
-                parent[y] = x;
-                rank[x]++;
-            }
-        }
-    }
-
-    bool connected(int u, int v) {
-        return find(u) == find(v);
-    }
-};
-
-
-//longest prefix suffix template
-
-vector<int> computeLPS(string word) {
-    int n = word.length();
-    vector<int> lps(n, 0); 
-    int len = 0; 
-    int i = 1;
-
-    while (i < n) {
-        if (word[i] == word[len]) {
-            len++;
-            lps[i] = len;
-            i++;
+    if (segmentKey == 91519) {
+        if (led[0].substr(pos, 5) == "11111") {
+            return 'M';
         } else {
-            if (len != 0) {
-                len = lps[len - 1]; 
-            } else {
-                lps[i] = 0;
-                i++;
+            return 'W';
+        }
+    } else if (segmentKey == 91119) {
+        if (led[8].substr(pos, 5) == "11111") {
+            return 'U';
+        } else if (led[4].substr(pos, 5) == "11111") {
+            return 'H';
+        } else {
+            return 'N';
+        }
+    } else if (segmentKey == 92222) {
+        if (led[4].substr(pos, 5) == "11111") {
+            return 'F';
+        } else {
+            return 'C';
+        }
+    } else if (segmentKey == 92229) {
+        if (led[8].substr(pos, 5) == "11111") {
+            return 'D';
+        } else {
+            return 'A';
+        }
+    } else {
+        for (auto& p : segPatterns) {
+            if (p.first == segmentKey) {
+                return p.second[0];
             }
         }
     }
-    return lps;
+    return '?'; 
 }
 
-
-
-//segment tree template
-
-
-class SegmentTree {
-private:
-    vector<int> tree; // Segment tree
-    vector<int> data; // Original data
-    int n;           // Size of the data
-
-    void build(int node, int start, int end) {
-        if (start == end) {
-            tree[node] = data[start]; 
-        } else {
-            int mid = (start + end) / 2;
-            build(2 * node + 1, start, mid);      
-            build(2 * node + 2, mid + 1, end);   
-            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; 
-        }
-    }
-
-    void update(int node, int start, int end, int idx, int value) {
-        if (start == end) {
-            data[idx] = value; // Update the original data
-            tree[node] = value; // Update the tree
-        } else {
-            int mid = (start + end) / 2;
-            if (start <= idx && idx <= mid) {
-                update(2 * node + 1, start, mid, idx, value); // Left child
-            } else {
-                update(2 * node + 2, mid + 1, end, idx, value); // Right child
+string decodeDisplay(const vector<string>& led) {
+    int totalColumns = led[0].size();
+    string mergedDisplay = led[0];
+    
+    for (int i = 1; i < 9; i++) {
+        for (int j = 0; j < totalColumns; j++) {
+            if (mergedDisplay[j] == '0' && led[i][j] == '1') {
+                mergedDisplay[j] = '1';
             }
-            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; // Update internal node
         }
     }
 
-    int query(int node, int start, int end, int l, int r) {
-        if (r < start || end < l) return 0; // Out of range
-        if (l <= start && end <= r) return tree[node]; // Node is completely within range
-        int mid = (start + end) / 2;
-        int left_sum = query(2 * node + 1, start, mid, l, r); // Left child
-        int right_sum = query(2 * node + 2, mid + 1, end, l, r); // Right child
-        return left_sum + right_sum; // Combine results
+    string result = "";
+    int idx = 0;
+    while (idx < totalColumns) {
+        if (mergedDisplay[idx] == '1') {
+            result += decodeSegment(idx, led);
+            idx += 5;
+        } else {
+            idx++;
+        }
     }
-
-public:
-    SegmentTree(vector<int>& input) {
-        data = input;
-        n = input.size();
-        tree.resize(4 * n); // Size of segment tree
-        build(0, 0, n - 1);  // Build the segment tree
-    }
-
-    void update(int idx, int value) {
-        update(0, 0, n - 1, idx, value);
-    }
-
-    int query(int l, int r) {
-        return query(0, 0, n - 1, l, r);
-    }
-};
-
-
-
-
+    return result;
+}
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    //Trie trie;
-    //dsu dset(n);
-    //vector<int> lps = computeLPS(string);
-    //SegmentTree segTree(array);
-    int n,q;
-    string s;
-    cin>>n>>q;
-    cin>>s;
-    vector<int>left(n,0);
-    vector<int>right(n,0);
-    vector<int>temp;
-    for(int i=0;i<n;i++)
-    {
-        if(s[i]=='1')
-        {
-            ++left[i];
-        }
-        if(i>0)
-        {
-            left[i]+=left[i-1];
-        }
-        if(s[i]=='/')
-        {
-            temp.push_back(i);
-        }
+    int rows = 9;
+    vector<string> led(rows);
+    for (int i = 0; i < rows; i++) {
+        cin >> led[i];
     }
-     for(int i=n-1;i>=0;i--)
-    {
-        if(s[i]=='2')
-        {
-            ++right[i];
-        }
-        if(i<n-1)
-        {
-            right[i]+=right[i+1];
-        }
-    }
-    while(q--)
-    {
-        int x;
-        int y;
-        cin>>x>>y;
-        --x;
-        --y;
-        int p=lower_bound(temp.begin(),temp.end(),x)-temp.begin();
-        if(p>=temp.size())
-        {
-            cout<<0<<endl;
-            continue;
-        }
-        if(temp[p]>y)
-        {
-            cout<<0<<endl;
-            continue;
-        }
-        int q=lower_bound(temp.begin(),temp.end(),y)-temp.begin();
-
-
-
-
-
-    }
-
-
-    
-
-
-    
-    return 0;    
+    cout << decodeDisplay(led) << endl;
+    return 0;
 }
