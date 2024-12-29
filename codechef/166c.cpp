@@ -352,7 +352,8 @@ int main() {
         cin >> n;
 
         vector<int> a(n);
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) 
+        {
             cin >> a[i];
             a[i]--;
         }
@@ -360,7 +361,8 @@ int main() {
         vector<bool> vis(n, false);
         vector<int> len;
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++)
+         {
             if (!vis[i]) {
                 int d = 0, b = i;
                 while (!vis[b]) {
@@ -375,7 +377,8 @@ int main() {
         priority_queue<int, vector<int>, greater<int>> pq(len.begin(), len.end());
         long long res = 0;
 
-        while (pq.size() > 1) {
+        while (pq.size() > 1)
+         {
             int x = pq.top();
             pq.pop();
             int y = pq.top();

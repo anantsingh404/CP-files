@@ -413,26 +413,31 @@ int main() {
    
      ll t;
     cin >> t;
-    while (t--) {
+    while (t--) 
+    {
      int n;
     cin >> n;
     vector<int> arr(n);
     map<int, int> dayMax;
 
     int i = 0;
-    while (i < n) {
+    while (i < n)
+     {
         cin >> arr[i];
         i++;
     }
 
     i = 0;
-    while (i < n) {
+    while (i < n) 
+    {
         int day = arr[i];
         int pen = i + 1;
 
-        if (dayMax.find(day) == dayMax.end()) {
+        if (dayMax.find(day) == dayMax.end()) 
+        {
             dayMax[day] = pen;
-        } else {
+        } else 
+        {
             dayMax[day] = max(dayMax[day], pen);
         }
         i++;
@@ -440,7 +445,8 @@ int main() {
 
     int totPen = 0;
     auto it = dayMax.begin();
-    while (it != dayMax.end()) {
+    while (it != dayMax.end())
+     {
         totPen += it->second;
         it++;
     }
