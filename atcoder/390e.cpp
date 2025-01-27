@@ -198,13 +198,27 @@ public:
         return query(0, 0, n - 1, l, r);
     }
 };
+struct Food {
+    int vitamin, amount, calories;
+};
 
+// Function to check if a target minimum vitamin intake is achievable
+bool isAchievable(int target, const vector<Food>& foods, int maxCalories) {
+    vector<vector<int>> dp(maxCalories + 1, vector<int>(3, 0)); // Tracks vitamin intake with calorie constraints
 
-bool canSortWithOneSwap(const vector<int>& A) {
-    for (int i = 0; i < 4; ++i) {
-        vector<int> temp = A;
-        swap(temp[i], temp[i + 1]);
-        if (is_sorted(temp.begin(), temp.end())) {
+    for (const auto& food : foods) {
+        int vit = food.vitamin - 1; // 0-index vitamin type
+        int amt = food.amount, cal = food.calories;
+
+        // Update DP table backward to prevent overwriting
+        for (int c = maxCalories; c >= cal; --c) {
+            dp[c][vit] = max(dp[c][vit], dp[c - cal][vit] + amt);
+        }
+    }
+
+    for (int c = 0; c <= maxCalories; ++c) {
+        // Check if the minimum intake for all vitamins is at least `target`
+        if (dp[c][0] >= target && dp[c][1] >= target && dp[c][2] >= target) {
             return true;
         }
     }
@@ -212,14 +226,28 @@ bool canSortWithOneSwap(const vector<int>& A) {
 }
 
 int main() {
-    vector<int>A(5);
-    for (int i = 0; i < 5; ++i) {
-        cin >> A[i];
+    int n, x;
+    cin >> n >> x;
+
+    vector<Food> foods(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> foods[i].vitamin >> foods[i].amount >> foods[i].calories;
     }
-    if (canSortWithOneSwap(A)) {
-        cout << "Yes" << endl;
-    } else {
-        cout <<"No"<< endl;
+
+    // Binary search for the maximum possible minimum vitamin intake
+    int low = 0, high = 200000, result = 0;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+
+        if (isAchievable(mid, foods, x)) {
+            result = mid; // Update result if achievable
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
     }
+
+    cout << result << endl;
     return 0;
 }

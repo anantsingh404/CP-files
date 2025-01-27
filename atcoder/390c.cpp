@@ -200,26 +200,43 @@ public:
 };
 
 
-bool canSortWithOneSwap(const vector<int>& A) {
-    for (int i = 0; i < 4; ++i) {
-        vector<int> temp = A;
-        swap(temp[i], temp[i + 1]);
-        if (is_sorted(temp.begin(), temp.end())) {
-            return true;
+
+bool canFormRectangle(const vector<string>& grid, int H, int W) {
+    int top = H, bottom = -1, left = W, right = -1;
+    for (int i = 0; i < H; ++i) {
+        for (int j = 0; j < W; ++j) {
+            if (grid[i][j] == '#') {
+                top = min(top, i);
+                bottom = max(bottom, i);
+                left = min(left, j);
+                right = max(right, j);
+            }
         }
     }
-    return false;
+    for (int i = 0; i < H; ++i) {
+        for (int j = 0; j < W; ++j) {
+            if (grid[i][j] == '#') {
+                if (i < top || i > bottom || j < left || j > right) return false;
+            } else if (grid[i][j] == '.') {
+                if (i >= top && i <= bottom && j >= left && j <= right) return false;
+            }
+        }
+    }
+    return true;
 }
 
 int main() {
-    vector<int>A(5);
-    for (int i = 0; i < 5; ++i) {
-        cin >> A[i];
+    int H, W;
+    cin >> H >> W;
+    vector<string> grid(H);
+    for (int i = 0; i < H; ++i) {
+        cin >> grid[i];
     }
-    if (canSortWithOneSwap(A)) {
+    if (canFormRectangle(grid, H, W)) {
         cout << "Yes" << endl;
     } else {
-        cout <<"No"<< endl;
+        cout << "No" << endl;
     }
     return 0;
 }
+

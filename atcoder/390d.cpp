@@ -200,26 +200,45 @@ public:
 };
 
 
-bool canSortWithOneSwap(const vector<int>& A) {
-    for (int i = 0; i < 4; ++i) {
-        vector<int> temp = A;
-        swap(temp[i], temp[i + 1]);
-        if (is_sorted(temp.begin(), temp.end())) {
-            return true;
+
+const long long MAX_BITS = 64; // As Ai ≤ 10^17, we need up to 64 bits
+
+// Function to perform Gaussian elimination in the binary field
+int countDistinctXorValues(const vector<long long>& stones) {
+    vector<long long> basis(MAX_BITS, 0); // Basis array to store the independent elements
+    int basisSize = 0;
+
+    for (long long num : stones) {
+        for (int i = MAX_BITS - 1; i >= 0; --i) {
+            if ((num >> i) & 1) { // If the ith bit is set
+                if (basis[i] == 0) {
+                    // No basis vector for this bit, set it as a new basis
+                    basis[i] = num;
+                    ++basisSize;
+                    break;
+                } else {
+                    // Reduce num by XOR'ing it with the current basis vector
+                    num ^= basis[i];
+                }
+            }
         }
     }
-    return false;
+
+    // The number of distinct possible XOR values is 2^basisSize
+    return 1 << basisSize;
 }
 
 int main() {
-    vector<int>A(5);
-    for (int i = 0; i < 5; ++i) {
-        cin >> A[i];
+    int N;
+    cin >> N;
+    vector<long long> stones(N);
+
+    for (int i = 0; i < N; ++i) {
+        cin >> stones[i];
     }
-    if (canSortWithOneSwap(A)) {
-        cout << "Yes" << endl;
-    } else {
-        cout <<"No"<< endl;
-    }
+
+    int result = countDistinctXorValues(stones);
+    cout << result << endl;
+
     return 0;
 }
