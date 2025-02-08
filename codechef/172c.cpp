@@ -271,30 +271,30 @@ vector<int> computeLPS(string word) {
 
 
 
-//segment st template
+//segment tree template
 
 
-class Segmentst {
+class SegmentTree {
 private:
-    vector<int> st; // Segment st
+    vector<int> tree; // Segment tree
     vector<int> data; // Original data
     int n;           // Size of the data
 
     void build(int node, int start, int end) {
         if (start == end) {
-            st[node] = data[start]; 
+            tree[node] = data[start]; 
         } else {
             int mid = (start + end) / 2;
             build(2 * node + 1, start, mid);      
             build(2 * node + 2, mid + 1, end);   
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; 
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; 
         }
     }
 
     void update(int node, int start, int end, int idx, int value) {
         if (start == end) {
             data[idx] = value; // Update the original data
-            st[node] = value; // Update the st
+            tree[node] = value; // Update the tree
         } else {
             int mid = (start + end) / 2;
             if (start <= idx && idx <= mid) {
@@ -302,13 +302,13 @@ private:
             } else {
                 update(2 * node + 2, mid + 1, end, idx, value); // Right child
             }
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; // Update internal node
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; // Update internal node
         }
     }
 
     int query(int node, int start, int end, int l, int r) {
         if (r < start || end < l) return 0; // Out of range
-        if (l <= start && end <= r) return st[node]; // Node is completely within range
+        if (l <= start && end <= r) return tree[node]; // Node is completely within range
         int mid = (start + end) / 2;
         int left_sum = query(2 * node + 1, start, mid, l, r); // Left child
         int right_sum = query(2 * node + 2, mid + 1, end, l, r); // Right child
@@ -316,11 +316,11 @@ private:
     }
 
 public:
-    Segmentst(vector<int>& input) {
+    SegmentTree(vector<int>& input) {
         data = input;
         n = input.size();
-        st.resize(4 * n); // Size of segment st
-        build(0, 0, n - 1);  // Build the segment st
+        tree.resize(4 * n); // Size of segment tree
+        build(0, 0, n - 1);  // Build the segment tree
     }
 
     void update(int idx, int value) {
@@ -333,99 +333,112 @@ public:
 };
 
 */
-
-
-int np(int n) {
-    int a = 1;
-    while(a < n) {
-        a <<= 1;
+vector<int> cn(const vector<int>& L, const vector<int>& R) 
+{
+    vector<int> res(5);
+    res[0] = L[0] ^ R[0];
+    int a = 0;
+    while(a < 2) {
+        int b = 0;
+        while(b < 2)
+         {
+            int c = L[1 + a * 2 + b];
+            int d = a ^ L[0];
+            res[1 + a * 2 + b] = R[1 + d * 2 + c];
+            b++;
+        }
+        a++;
     }
-    return a;
+    return res;
+}
+
+vector<int> ml(int v)
+ {
+    vector<int> ret(5);
+    ret[0] = 1;
+    ret[1] = 0;
+    ret[2] = v;
+    ret[3] = v;
+    ret[4] = 1;
+    return ret;
+}
+
+void bd(vector< vector<int> > &T, vector<int> &A, int i, int l, int r)
+ {
+    if(l == r) 
+    {
+        T[i] = ml(A[l]);
+        return;
+    }
+    int c = (l + r) / 2;
+    bd(T, A, i * 2, l, c);
+    bd(T, A, i * 2 + 1, c + 1, r);
+    T[i] = cn(T[i * 2], T[i * 2 + 1]);
+}
+
+void up(vector< vector<int> > &T, int i, int l, int r, int pos, int v)
+ {
+    if(l == r) 
+    {
+        T[i] = ml(v);
+        return;
+    }
+    int c = (l + r) / 2;
+    if(pos <= c)
+        up(T, i * 2, l, c, pos, v);
+    else
+        up(T, i * 2 + 1, c + 1, r, pos, v);
+    T[i] = cn(T[i * 2], T[i * 2 + 1]);
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    
     int t;
     cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        vector<int> arr(n);
-        int a = 0;
-        while(a < n) {
-            cin >> arr[a];
-            a++;
-        }
-        
-        int size = np(n);
-        vector<int> st(2 * size, 0);
-        
-        a = 0;
-        while(a < n) {
-            st[size + a] = arr[a];
-            a++;
-        }
-        
-        a = n;
-        while(a < size) {
-            st[size + a] = 0;
-            a++;
-        }
-        
-        int temp = 0;
-        int ls = size;
-        while(ls > 1) {
-            int b = ls / 2;
-            while(b < ls) 
-            {
-                int c = st[2 * b];
-                int d = st[2 * b + 1];
-                if(temp == 0)
-                {
-                    st[b] = c & d;
-                }
-                else
-                {
-                    st[b] = c | d;
-                }
-                b++;
-            }
-            temp = 1 - temp;
-            ls /= 2;
-        }
-        
-        int q;
-        cin >> q;
-        while(q--)
+    while(t--)
+    {
+        int N;
+        cin >> N;
+        vector<int> A(N + 1, 0);
+        int a = 1;
+        while(a <= N)
         {
-            int p, x;
-            cin >> p >> x;
-            p--; 
-            int pos = size + p;
-            st[pos] = x;
-            
-            temp = 0;
-            pos /= 2;
-            while(pos >= 1)
+            cin >> A[a];
+            a++;
+        }
+        int Q;
+        cin >> Q;
+        vector< vector<int> > T;
+        int s = N - 1;
+        if(s > 0) {
+            vector<int> B(s + 1, 0);
+            a = 1;
+            while(a <= s) 
             {
-                int c = st[2 * pos];
-                int d = st[2 * pos + 1];
-                if(temp == 0)
-                {
-                    st[pos] = c & d;
-                }
-                else
-                {
-                    st[pos]=c|d;
-                }
-                pos/= 2;
-                temp=1-temp;
+                B[a] = A[a + 1];
+                a++;
             }
-            cout<<st[1]<<endl;
+            T.resize(4 * (s + 1));
+            bd(T, B, 1, 1, s);
+        }
+        while(Q--)
+        {
+            int p, X;
+            cin >> p >> X;
+            A[p] = X;
+            if(p != 1 && s > 0)
+            {
+                up(T, 1, 1, s, p - 1, X);
+            }
+            int ans = 0;
+            if(N == 1)
+                ans = A[1];
+            else
+                
+                ans = T[1][1 + A[1]];
+            cout<<ans<<endl;
         }
     }
-    
     return 0;
 }

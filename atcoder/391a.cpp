@@ -199,28 +199,53 @@ public:
     }
 };
 
-
-bool isGeometricProgression(const vector<int>& A) {
-    
-    if (A.size()<3) return true;
-    long long r = A[1] / A[0];
-    for (size_t i = 1; i < A.size(); ++i) {
-        if ((long long)A[i]*A[0] != (long long)A[1]*A[i-1]) return false;
-    }
-    return true;
-}
-
 int main() {
     int N;
-    cin >> N;
-    vector<int> A(N);
-    for (int i = 0; i < N; ++i) {
-        cin >> A[i];
+    string A;
+    cin >> N >> A;
+
+    int size = A.size();
+    vector<vector<int>> dp(size, vector<int>(2, INT_MAX));
+
+    
+    for (int i = 0; i < size; ++i)
+     {
+        dp[i][A[i] - '0'] = 0;
+        dp[i][1 - (A[i] - '0')] = 1;
     }
-    if (isGeometricProgression(A)) {
-        cout << "Yes" << endl;
-    } else {
-        cout << "No" << endl;
+
+    for (int level = 1; level <= N; ++level) 
+    {
+        int new_size = size / 3;
+        vector<vector<int>> new_dp(new_size, vector<int>(2, INT_MAX));
+
+        for (int i = 0; i < new_size; ++i)
+         {
+            int child1 = 3 * i;
+            int child2 = 3 * i + 1;
+            int child3 = 3 * i + 2;
+
+            for (int val1 = 0; val1 < 2; ++val1)
+             {
+                for (int val2 = 0; val2 < 2; ++val2) 
+                {
+                    for (int val3 = 0; val3 < 2; ++val3) 
+                    {
+                        int majority = (val1 + val2 + val3 >= 2) ? 1 : 0;
+                        int cost = dp[child1][val1] + dp[child2][val2] + dp[child3][val3];
+                        new_dp[i][majority] = min(new_dp[i][majority], cost);
+                    }
+                }
+            }
+        }
+
+        dp = new_dp;
+        size = new_size;
     }
+
+    int final_value = dp[0][0] < dp[0][1] ? 0 : 1;
+    int min_changes = dp[0][1 - final_value];
+    cout << min_changes << endl;
+
     return 0;
 }

@@ -1,11 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define loop (int i=0;i<n;i++)
+#define inp (int i=0;i<n;i++)
 const int mod=1e9+7;
-
-
-
 
 //trie template
 class trienode {
@@ -190,37 +187,18 @@ public:
         build(0, 0, n - 1);  // Build the segment tree
     }
 
-    void update(int idx, int value) {
+    void update(int idx, int value) 
+    {
         update(0, 0, n - 1, idx, value);
     }
 
-    int query(int l, int r) {
+    int query(int l, int r) 
+    {
         return query(0, 0, n - 1, l, r);
     }
 };
 
 
-bool isGeometricProgression(const vector<int>& A) {
-    
-    if (A.size()<3) return true;
-    long long r = A[1] / A[0];
-    for (size_t i = 1; i < A.size(); ++i) {
-        if ((long long)A[i]*A[0] != (long long)A[1]*A[i-1]) return false;
-    }
-    return true;
-}
-
 int main() {
-    int N;
-    cin >> N;
-    vector<int> A(N);
-    for (int i = 0; i < N; ++i) {
-        cin >> A[i];
-    }
-    if (isGeometricProgression(A)) {
-        cout << "Yes" << endl;
-    } else {
-        cout << "No" << endl;
-    }
-    return 0;
+   
 }

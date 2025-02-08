@@ -3,7 +3,8 @@ using namespace std;
 #define ll long long
 #define pqmin priority_queue<int,vector<int>,greater<int>>
 #define pqmax priority_queue<int>
-const int mod=1e9+7;
+const int MOD=1e9+7;
+#define MODINV 500000004 
 
 
 
@@ -271,30 +272,30 @@ vector<int> computeLPS(string word) {
 
 
 
-//segment st template
+//segment tree template
 
 
-class Segmentst {
+class SegmentTree {
 private:
-    vector<int> st; // Segment st
+    vector<int> tree; // Segment tree
     vector<int> data; // Original data
     int n;           // Size of the data
 
     void build(int node, int start, int end) {
         if (start == end) {
-            st[node] = data[start]; 
+            tree[node] = data[start]; 
         } else {
             int mid = (start + end) / 2;
             build(2 * node + 1, start, mid);      
             build(2 * node + 2, mid + 1, end);   
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; 
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; 
         }
     }
 
     void update(int node, int start, int end, int idx, int value) {
         if (start == end) {
             data[idx] = value; // Update the original data
-            st[node] = value; // Update the st
+            tree[node] = value; // Update the tree
         } else {
             int mid = (start + end) / 2;
             if (start <= idx && idx <= mid) {
@@ -302,13 +303,13 @@ private:
             } else {
                 update(2 * node + 2, mid + 1, end, idx, value); // Right child
             }
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; // Update internal node
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; // Update internal node
         }
     }
 
     int query(int node, int start, int end, int l, int r) {
         if (r < start || end < l) return 0; // Out of range
-        if (l <= start && end <= r) return st[node]; // Node is completely within range
+        if (l <= start && end <= r) return tree[node]; // Node is completely within range
         int mid = (start + end) / 2;
         int left_sum = query(2 * node + 1, start, mid, l, r); // Left child
         int right_sum = query(2 * node + 2, mid + 1, end, l, r); // Right child
@@ -316,11 +317,11 @@ private:
     }
 
 public:
-    Segmentst(vector<int>& input) {
+    SegmentTree(vector<int>& input) {
         data = input;
         n = input.size();
-        st.resize(4 * n); // Size of segment st
-        build(0, 0, n - 1);  // Build the segment st
+        tree.resize(4 * n); // Size of segment tree
+        build(0, 0, n - 1);  // Build the segment tree
     }
 
     void update(int idx, int value) {
@@ -333,99 +334,96 @@ public:
 };
 
 */
-
-
-int np(int n) {
-    int a = 1;
-    while(a < n) {
-        a <<= 1;
+ll modExp(ll a, ll b, ll c) {
+    ll result = 1;
+    while (b > 0) {
+        if (b % 2 == 1) result = (result * a) % c;
+        a = (a * a) % c;
+        b /= 2;
     }
-    return a;
+    return result;
 }
 
-int main(){
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+
     int t;
     cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        vector<int> arr(n);
-        int a = 0;
-        while(a < n) {
-            cin >> arr[a];
-            a++;
+    while (t--) {
+    int n, k;
+    cin >> n >> k;
+    int half = n / 2;
+    ll a = 1, b = 1, c = 1;
+    vector<int> arr(n);
+    int i = 0;
+    while (i < n)
+     {
+        cin>>arr[i];
+        i++;
+    }
+     i = 0;
+    while (i < n)
+     {
+        if (arr[i] == 0) {
+            a = (a * k)%MOD;
         }
-        
-        int size = np(n);
-        vector<int> st(2 * size, 0);
-        
-        a = 0;
-        while(a < n) {
-            st[size + a] = arr[a];
-            a++;
-        }
-        
-        a = n;
-        while(a < size) {
-            st[size + a] = 0;
-            a++;
-        }
-        
-        int temp = 0;
-        int ls = size;
-        while(ls > 1) {
-            int b = ls / 2;
-            while(b < ls) 
-            {
-                int c = st[2 * b];
-                int d = st[2 * b + 1];
-                if(temp == 0)
-                {
-                    st[b] = c & d;
-                }
-                else
-                {
-                    st[b] = c | d;
-                }
-                b++;
-            }
-            temp = 1 - temp;
-            ls /= 2;
-        }
-        
-        int q;
-        cin >> q;
-        while(q--)
-        {
-            int p, x;
-            cin >> p >> x;
-            p--; 
-            int pos = size + p;
-            st[pos] = x;
+        i++;
+    }
+
+    i = 0;
+    while (i<n)
+     {
+        int j = n-i-1;
+        if (arr[j]!= 0)
+         {
             
-            temp = 0;
-            pos /= 2;
-            while(pos >= 1)
+            if (arr[i] != 0 && arr[i] != arr[j]) 
             {
-                int c = st[2 * pos];
-                int d = st[2 * pos + 1];
-                if(temp == 0)
-                {
-                    st[pos] = c & d;
-                }
-                else
-                {
-                    st[pos]=c|d;
-                }
-                pos/= 2;
-                temp=1-temp;
+                b = 0;
+                break;
             }
-            cout<<st[1]<<endl;
+        } 
+        else if (arr[i] == 0)
+         {
+            b = (b * k) % MOD;
+        }
+        i++;
+    }
+    i = 0;
+    while (i<half) 
+    {
+        int j = n-i-1;
+        if (arr[i]!= 0 && arr[j] != 0)
+         {
+            if (arr[i] != arr[j])
+             {
+                c = 0;
+                break;
+            }
+        }
+         else if (arr[i] == 0 && arr[j] == 0)
+          {
+            c = (c*k)%MOD;
+        }
+        i++;
+    }
+
+    if (n%2==1)
+     {
+        int mid = n/2;
+        if (arr[mid]==0) 
+        {
+            c=(c*k)%MOD;
         }
     }
-    
+
+    ll d=(2*a)%MOD;
+    ll e =(d-b+c+MOD)%MOD;
+    ll f =(e*MODINV)%MOD;
+
+    cout<<f<<endl;
+    }
+
     return 0;
 }

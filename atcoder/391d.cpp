@@ -1,11 +1,9 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
 #define loop (int i=0;i<n;i++)
 const int mod=1e9+7;
-
-
-
 
 //trie template
 class trienode {
@@ -200,27 +198,73 @@ public:
 };
 
 
-bool isGeometricProgression(const vector<int>& A) {
-    
-    if (A.size()<3) return true;
-    long long r = A[1] / A[0];
-    for (size_t i = 1; i < A.size(); ++i) {
-        if ((long long)A[i]*A[0] != (long long)A[1]*A[i-1]) return false;
-    }
-    return true;
-}
+
+
 
 int main() {
-    int N;
-    cin >> N;
-    vector<int> A(N);
-    for (int i = 0; i < N; ++i) {
-        cin >> A[i];
+    ll a, b;
+    cin >> a >> b;
+
+    vector<pair<ll, ll>> c(a);
+    for (ll i = 0; i < a; ++i) {
+        cin >> c[i].first >> c[i].second;
     }
-    if (isGeometricProgression(A)) {
-        cout << "Yes" << endl;
-    } else {
-        cout << "No" << endl;
+
+    map<ll, vector<ll>> d;
+    for (ll i = 0; i < a; ++i) {
+        ll e = c[i].first;
+        ll f = c[i].second;
+        d[e].push_back(f);
     }
+
+    for (auto& g : d) {
+        sort(g.second.begin(), g.second.end());
+    }
+
+    vector<ll> h;
+    ll i = a;
+    for (const auto& j : d) {
+        i = min(i, (ll)j.second.size());
+    }
+
+    for (ll k = 0; k < i; ++k) {
+        ll l = 0;
+        for (const auto& j : d) {
+            l = max(l, j.second[k]);
+        }
+        h.push_back(l);
+    }
+
+    ll m;
+    cin >> m;
+    vector<pair<ll, ll>> n(m);
+    for (ll o = 0; o < m; ++o) {
+        cin >> n[o].first >> n[o].second;
+    }
+
+    for (const auto& p : n) {
+        ll q = p.first;
+        ll r = p.second - 1;
+
+        if (r < 0 || r >= a) {
+            cout << "No" << endl;
+            continue;
+        }
+
+        ll s = c[r].first;
+        ll t = c[r].second;
+
+        auto& u = d[s];
+        ll v = lower_bound(u.begin(), u.end(), t) - u.begin();
+
+        ll w = upper_bound(h.begin(), h.end(), q) - h.begin();
+
+        if (v < w) {
+            cout << "No" << endl;
+        } else {
+            cout << "Yes" << endl;
+        }
+    }
+
     return 0;
 }

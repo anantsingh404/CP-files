@@ -271,30 +271,30 @@ vector<int> computeLPS(string word) {
 
 
 
-//segment st template
+//segment tree template
 
 
-class Segmentst {
+class SegmentTree {
 private:
-    vector<int> st; // Segment st
+    vector<int> tree; // Segment tree
     vector<int> data; // Original data
     int n;           // Size of the data
 
     void build(int node, int start, int end) {
         if (start == end) {
-            st[node] = data[start]; 
+            tree[node] = data[start]; 
         } else {
             int mid = (start + end) / 2;
             build(2 * node + 1, start, mid);      
             build(2 * node + 2, mid + 1, end);   
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; 
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; 
         }
     }
 
     void update(int node, int start, int end, int idx, int value) {
         if (start == end) {
             data[idx] = value; // Update the original data
-            st[node] = value; // Update the st
+            tree[node] = value; // Update the tree
         } else {
             int mid = (start + end) / 2;
             if (start <= idx && idx <= mid) {
@@ -302,13 +302,13 @@ private:
             } else {
                 update(2 * node + 2, mid + 1, end, idx, value); // Right child
             }
-            st[node] = st[2 * node + 1] + st[2 * node + 2]; // Update internal node
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; // Update internal node
         }
     }
 
     int query(int node, int start, int end, int l, int r) {
         if (r < start || end < l) return 0; // Out of range
-        if (l <= start && end <= r) return st[node]; // Node is completely within range
+        if (l <= start && end <= r) return tree[node]; // Node is completely within range
         int mid = (start + end) / 2;
         int left_sum = query(2 * node + 1, start, mid, l, r); // Left child
         int right_sum = query(2 * node + 2, mid + 1, end, l, r); // Right child
@@ -316,11 +316,11 @@ private:
     }
 
 public:
-    Segmentst(vector<int>& input) {
+    SegmentTree(vector<int>& input) {
         data = input;
         n = input.size();
-        st.resize(4 * n); // Size of segment st
-        build(0, 0, n - 1);  // Build the segment st
+        tree.resize(4 * n); // Size of segment tree
+        build(0, 0, n - 1);  // Build the segment tree
     }
 
     void update(int idx, int value) {
@@ -335,97 +335,49 @@ public:
 */
 
 
-int np(int n) {
-    int a = 1;
-    while(a < n) {
-        a <<= 1;
-    }
-    return a;
-}
 
-int main(){
-    ios::sync_with_stdio(false);
+int main() {
+    ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
-    int t;
+    //Trie trie;
+    //dsu dset(n);
+    //vector<int> lps = computeLPS(string);
+    //SegmentTree segTree(array);
+   
+     ll t;
     cin >> t;
-    while(t--){
+    while (t--) {
         int n;
-        cin >> n;
-        vector<int> arr(n);
-        int a = 0;
-        while(a < n) {
-            cin >> arr[a];
-            a++;
-        }
-        
-        int size = np(n);
-        vector<int> st(2 * size, 0);
-        
-        a = 0;
-        while(a < n) {
-            st[size + a] = arr[a];
-            a++;
-        }
-        
-        a = n;
-        while(a < size) {
-            st[size + a] = 0;
-            a++;
-        }
-        
-        int temp = 0;
-        int ls = size;
-        while(ls > 1) {
-            int b = ls / 2;
-            while(b < ls) 
-            {
-                int c = st[2 * b];
-                int d = st[2 * b + 1];
-                if(temp == 0)
-                {
-                    st[b] = c & d;
-                }
-                else
-                {
-                    st[b] = c | d;
-                }
-                b++;
-            }
-            temp = 1 - temp;
-            ls /= 2;
-        }
-        
-        int q;
-        cin >> q;
-        while(q--)
+        cin>>n;
+        string s;
+        cin>>s;
+        if(n<=2)
         {
-            int p, x;
-            cin >> p >> x;
-            p--; 
-            int pos = size + p;
-            st[pos] = x;
-            
-            temp = 0;
-            pos /= 2;
-            while(pos >= 1)
-            {
-                int c = st[2 * pos];
-                int d = st[2 * pos + 1];
-                if(temp == 0)
-                {
-                    st[pos] = c & d;
-                }
-                else
-                {
-                    st[pos]=c|d;
-                }
-                pos/= 2;
-                temp=1-temp;
-            }
-            cout<<st[1]<<endl;
+            cout<<0<<endl;
+            continue;
         }
+       string pat1 = "RGB", pat2 = "GBR", pat3 = "BRG";
+        int res = n;
+        
+        for (int k = 0; k < 3; k++) {
+            int count = 0;
+            for (int i = 0; i < n; i++) {
+                if (s[i] != pat1[i % 3]) count++;
+            }
+            res = min(res, count);
+            count = 0;
+            for (int i = 0; i < n; i++) {
+                if (s[i] != pat2[i % 3]) count++;
+            }
+            res = min(res, count);
+            count = 0;
+            for (int i = 0; i < n; i++) {
+                if (s[i] != pat3[i % 3]) count++;
+            }
+            res = min(res, count);
+        }
+        
+        cout << res << endl;
     }
-    
-    return 0;
+return 0;
 }

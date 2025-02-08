@@ -120,7 +120,7 @@ public:
 // Depth First Search (DFS)
     void DFS(int start, vector<bool> &visited) {
         visited[start] = true;
-        cout << start << " ";
+        cress << start << " ";
 
         for (int i : adjList[start]) {
             if (!visited[i]) {
@@ -150,9 +150,9 @@ public:
         }
 
         // Print shortest distances
-        cout << "Vertex\tDistance from Source\n";
+        cress << "Vertex\tDistance from Source\n";
         for (int i = 0; i < V; i++) {
-            cout << i << "\t\t" << dist[i] << "\n";
+            cress << i << "\t\t" << dist[i] << "\n";
         }
     }
 
@@ -169,15 +169,15 @@ public:
             }
         }
         // Print the shortest distances between every pair of vertices
-        cout << "Shortest distances between every pair of vertices:\n";
+        cress << "Shortest distances between every pair of vertices:\n";
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
                 if (dist[i][j] == INT_MAX)
-                    cout << "INF ";
+                    cress << "INF ";
                 else
-                    cout << dist[i][j] << " ";
+                    cress << dist[i][j] << " ";
             }
-            cout << "\n";
+            cress << "\n";
         }
     }
 
@@ -205,10 +205,10 @@ public:
 
         // Print contents of stack
         while (!Stack.empty()) {
-            cout << Stack.top() << " ";
+            cress << Stack.top() << " ";
             Stack.pop();
         }
-        cout << endl;
+        cress << endl;
     }
 
 
@@ -230,16 +230,16 @@ public:
         for (int u = 0; u < V; u++) {
             for (auto &[v, weight] : edges[u]) {
                 if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
-                    cout << "Graph contains a negative weight cycle\n";
+                    cress << "Graph contains a negative weight cycle\n";
                     return false;
                 }
             }
         }
 
         // Print the distances
-        cout << "Vertex\tDistance from Source\n";
+        cress << "Vertex\tDistance from Source\n";
         for (int i = 0; i < V; i++) {
-            cout << i << "\t\t" << dist[i] << "\n";
+            cress << i << "\t\t" << dist[i] << "\n";
         }
         return true;
     }
@@ -307,7 +307,7 @@ private:
     }
 
     int query(int node, int start, int end, int l, int r) {
-        if (r < start || end < l) return 0; // Out of range
+        if (r < start || end < l) return 0; // ress of range
         if (l <= start && end <= r) return st[node]; // Node is completely within range
         int mid = (start + end) / 2;
         int left_sum = query(2 * node + 1, start, mid, l, r); // Left child
@@ -333,98 +333,145 @@ public:
 };
 
 */
-
-
-int np(int n) {
-    int a = 1;
-    while(a < n) {
-        a <<= 1;
+ class A {
+public:
+    int a;
+    vector<int> b;
+    A(int n) 
+    {
+        a = n;
+        b.assign(n + 1, 0);
     }
-    return a;
+    void c(int d, int e)
+     {
+        while(d <= a) {
+            b[d] += e;
+            d += d & -d;
+        }
+    }
+    int f(int d) {
+        int e = 0;
+        while(d > 0) {
+            e += b[d];
+            d -= d & -d;
+        }
+        return e;
+    }
+};
+
+class B {
+public:
+    int a;
+    vector<ll> b;
+    B(int n) {
+        a = n;
+        b.assign(n + 1, 0);
+    }
+    void c(int d, int e) {
+        while(d <= a) {
+            b[d] += e;
+            d += d & -d;
+        }
+    }
+    ll f(int d) {
+        ll e = 0;
+        while(d > 0) {
+            e += b[d];
+            d -= d & -d;
+        }
+        return e;
+    }
+};
+
+int g(int h, int i, A &j) 
+{
+    int k = 1, l = i, m = i;
+    while(k <= l) {
+        int n = (k + l) / 2;
+        int o = n - j.f(n);
+        if(o >= h) {
+            m = n;
+            l = n - 1;
+        } else {
+            k = n + 1;
+        }
+    }
+    return m;
+}
+
+ll p(int q, int i, A &j, B &k) {
+    if(q <= 0)
+        return 0;
+    int l = g(q, i, j);
+    int m = (l - 1) - j.f(l - 1);
+    ll n = (ll)(l - 1) * l / 2 - k.f(l - 1);
+    int o = q - m;
+    return n + (ll)o * l;
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     
-    int t;
-    cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        vector<int> arr(n);
-        int a = 0;
-        while(a < n) {
-            cin >> arr[a];
-            a++;
+    int a;
+    cin >> a;
+    while(a--){
+        int b, c;
+        cin >> b >> c;
+        vector<int> d(b);
+        int e = 0;
+        while(e < b) {
+            cin >> d[e];
+            e++;
+        }
+        int f = b - c;
+        int temp, h;
+        if(f % 2 == 0) {
+            temp = f / 2;
+            h = -1;
+        } else {
+            temp = (f - 1) / 2;
+            h = temp + 1;
+        }
+        int i = b - c + 1;
+        ll res = -1;
+        
+        A k(b), k2(b);
+        B l(b), l2(b);
+        e = 0;
+        while(e < c) {
+            int m = d[e];
+            k2.c(m, 1);
+            l2.c(m, m);
+            e++;
         }
         
-        int size = np(n);
-        vector<int> st(2 * size, 0);
-        
-        a = 0;
-        while(a < n) {
-            st[size + a] = arr[a];
-            a++;
-        }
-        
-        a = n;
-        while(a < size) {
-            st[size + a] = 0;
-            a++;
-        }
-        
-        int temp = 0;
-        int ls = size;
-        while(ls > 1) {
-            int b = ls / 2;
-            while(b < ls) 
-            {
-                int c = st[2 * b];
-                int d = st[2 * b + 1];
-                if(temp == 0)
-                {
-                    st[b] = c & d;
-                }
-                else
-                {
-                    st[b] = c | d;
-                }
-                b++;
-            }
-            temp = 1 - temp;
-            ls /= 2;
-        }
-        
-        int q;
-        cin >> q;
-        while(q--)
+        e = 0;
+        while(e < i) 
         {
-            int p, x;
-            cin >> p >> x;
-            p--; 
-            int pos = size + p;
-            st[pos] = x;
-            
-            temp = 0;
-            pos /= 2;
-            while(pos >= 1)
+            ll n = p(temp, b, k2, l2);
+            ll o;
+            if(f%2==0)
             {
-                int c = st[2 * pos];
-                int d = st[2 * pos + 1];
-                if(temp == 0)
-                {
-                    st[pos] = c & d;
-                }
-                else
-                {
-                    st[pos]=c|d;
-                }
-                pos/= 2;
-                temp=1-temp;
+                o=2LL*n;
             }
-            cout<<st[1]<<endl;
+            else
+            {
+                o=2LL*n+g(h, b, k2);
+            }
+            res = max(res, o);
+            if(e < i - 1)
+             {
+                int flag = d[e];
+                int q = d[e + c];
+                k2.c(flag, -1);
+                l2.c(flag, -flag);
+                k2.c(q, 1);
+                l2.c(q, q);
+            }
+            e++;
         }
+        cout <<res<<endl;
     }
     
     return 0;
