@@ -5,6 +5,9 @@ using namespace std;
 #define  ull  unsigned long long
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
+const int N = 2e5 + 5;
+vector<int> a[N];
+int b[N], c, d[N], e;
 
 /*
 
@@ -331,14 +334,104 @@ public:
 };
 
 */
+int f(int g, int h)
+ {
+    d[g]=1;
+    int i=0;
+    while(i<a[g].size()) 
+    {
+        int j=a[g][i];
+        if (j!=h)
+        {
+             d[g]=d[g]+f(j,g);
+        }
+        i++;
+    }
+    return d[g];
+}
 
-int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
+int k(int g, int h) 
+{
+    vector<int>l;
+    int i=0;
+    while (i<a[g].size())
+    {
+        int j=a[g][i];
+        if (j!=h) 
+        {
+            int m=k(j,g);
+            if(m)
+            {
+                 l.push_back(m);
+            }
+        }
+        i++;
+    }
+    i=0;
+    int ss=l.size();
+    while(i+1<ss) 
+    {
+        b[l[i]]=e+1;
+        b[l[i+1]]=e+1;
+        e=e+1;
+        i=i+2;
+    }
+    if(ss%2==1)
+    {
+        b[g]=e+1;
+        b[l.back()]=e+1;
+        e=e+1;
+        return 0;
+    }
+    return g;
+}
 
-   }
-   return 0;
+int main(){
+    int t;
+    cin>>t;
+    while(t--) 
+    {
+        int n;
+        cin>>n;
+        
+        for (int i=1;i<=n;i++)
+        {
+            a[i].clear();
+        } 
+        for (int i=2;i<=n;i++)
+        {   
+            int x;
+            cin>>x;
+            a[i].push_back(x);
+            a[x].push_back(i);
+        }
+        if (n%2==1)
+        {
+            cout<<-1<<endl;
+            continue;
+        }
+        f(1, 0);
+        bool temp=1;
+        for (int i=2;i<=n;i++) 
+        {
+            if (d[i]%2==0)
+            {
+                 temp=0;
+                 break;
+            }
+        }
+        if(temp==0)
+        {
+            cout<<-1<<endl;
+            continue;
+        }
+        e=0;
+        k(1,0);
+        for (int i=1;i<=n;i++)
+        {
+            cout<<b[i]<<' ';
+        } 
+        cout<<endl;
+    }
+    return 0;
 }

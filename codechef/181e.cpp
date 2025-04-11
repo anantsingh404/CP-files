@@ -5,6 +5,7 @@ using namespace std;
 #define  ull  unsigned long long
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
+int f[] = {-1, 1};
 
 /*
 
@@ -320,7 +321,9 @@ public:
         st.resize(4 * n); // Size of segment st
         build(0, 0, n - 1);  // Build the segment st
     }
-
+    int sumRange(int l, int r) {
+        return query(0, 0, n - 1, l, r);
+    }
     void update(int idx, int value) {
         update(0, 0, n - 1, idx, value);
     }
@@ -332,13 +335,63 @@ public:
 
 */
 
+
 int main() {
    ll t;
    cin>>t;
    while(t--)
    {
-     
-
+    int b,c;
+    cin>>b>>c;
+    vector<vector<int>>d(b,vector<int>(c));
+    int i=0;
+    while(i<b) 
+    {
+        int j = 0;
+        while (j<c) 
+        {
+            cin>>d[i][j];
+            j++;
+        }
+        i++;
+    }
+    int e=b*c;
+    int g=0;
+    while(g<2) 
+    {
+        int h=0;
+        while(h<2) 
+        {
+            unordered_map<long long,int>m;
+            int i=0;
+            while(i<b) 
+            {
+                int j=0;
+                while (j<c) 
+                {
+                    long long k=d[i][j]-1ll*i*f[g]-1ll*j*f[h];
+                    m[k]++;
+                    j++;
+                }
+                i++;
+            }
+            int n=0;
+            for(auto&x:m) 
+            {
+                if (x.second>n)
+                {
+                 n=x.second;
+                }
+            }
+            if(b*c-n<e)
+            {
+                e=b*c-n;
+            }
+            h++;
+        }
+        g++;
+    }
+    cout<<e<<endl;
    }
    return 0;
 }

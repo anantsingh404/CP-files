@@ -201,5 +201,24 @@ public:
 
 
 int main() {
-   
+   int n,m;
+   cin>>n>>m;
+   vector<int>dp(n+1,0);
+   int cc=0;
+   for(int i=0;i<m;i++)
+   {
+    int x;
+    cin>>x;
+    ++cc;
+    dp[x]++;
+   }
+   cout<<n-cc<<endl;
+   for(int i=1;i<=n;i++)
+   {
+    if(dp[i]==0)
+    {
+        cout<<i<<" ";
+    }
+   }
+   cout<<endl;
 }

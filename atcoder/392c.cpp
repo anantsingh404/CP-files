@@ -200,6 +200,34 @@ public:
 };
 
 
-int main() {
-   
+
+   int main() {
+    int a;
+    cin >> a;
+    
+    vector<int> b(a), c(a), d(a);
+    unordered_map<int, int> e;
+    
+    for (int i = 0; i < a; i++) {
+        cin >> b[i];
+    }
+    
+    for (int i = 0; i < a; i++) {
+        cin >> c[i];
+        e[c[i]] = i + 1;
+    }
+    
+    for (int i = 0; i < a; i++) {
+        int f = e[i + 1];
+        int g = b[f - 1];
+        d[i] = c[g - 1];
+    }
+
+    for (int i = 0; i < a; i++) {
+        cout << d[i] << " ";
+    }
+    cout << endl;
+
+    
+    return 0;
 }

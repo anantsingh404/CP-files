@@ -6,6 +6,7 @@ using namespace std;
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
 
+
 /*
 
 //trie template
@@ -331,14 +332,126 @@ public:
 };
 
 */
+// Perform DFS to pair up unmatched nodes and assign colors
+
 
 int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<int>p(n+1);
+        vector<int>deg(n+1,0);
+        string s="";
+        int i=2;
+        int e=1;
+        while(i<=n) 
+        {
+            cin>>p[i];
+            i++;
+        }
+        i=2;
+        while(i<=n)
+         {
+            int u=p[i];
+            deg[i]++;
+            int old=deg[u];
+            deg[u]++;
+            if (old%2==0)
+            {
+                 e=e-1;
+            }
+            else
+            {
+            e=e+1;
+            }
+            if(i%2==0 && e==0)
+            {
+                s=s+'1';
+            }
+            else
+            { 
+                s=s+'0';
+            }
+            i++;
+        }
+        cout<<s<<endl;
+        if (n%2==0 && e==0)
+         {
+            vector<vector<int>>g(n+1);
+            i=2;
+            while(i<=n)
+            {
+                g[i].push_back(p[i]);
+                g[p[i]].push_back(i);
+                i++;
+            }
+            vector<int>col(n+1,0);
+            vector<vector<int>>ul(n+1);
+            stack<tuple<int,int,bool>>st;
+            st.emplace(1,-1,false);
+            int c=1;
+            while(!st.empty())
+            {
+                auto [a,b,vis]=st.top();
+                st.pop();
+                if(!vis)
+                {
+                    st.emplace(a, b, true);
+                    for (int x:g[a]) 
+                    {
+                        if (x!=b) 
+                        {
+                            st.emplace(x, a, false);
+                        }
+                    }
+                }
+                 else 
+                 {
+                    vector<int>temp;
+                    for (int x :g[a]) 
+                    {
+                        if (x!=b) 
+                        {
+                            for(int y :ul[x])
+                            {
+                                 temp.push_back(y);
+                            }
+                        }
+                    }
+                    int j=0;
+                    while (j+1<temp.size())
+                     {
+                        col[temp[j]]=c;
+                        col[temp[j+1]]=c;
+                        c++;
+                        j=j+2;
+                    }
+                    if(temp.size()%2==1)
+                     {
+                        col[temp.back()]=c;
+                        col[a]=c;
+                        c=c+1;
+                        ul[a].clear();
+                    }
+                     else 
+                     {
+                        ul[a]={a};
+                     }
+                }
+            }
+            i=1;
+            while(i<=n) 
+            {
+                cout<<col[i]<<" ";
+                i++;
+            }
+            cout<<endl;
+        }
+    }
 
-   }
-   return 0;
+    return 0;
 }

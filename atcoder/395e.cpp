@@ -3,6 +3,8 @@ using namespace std;
 #define ll long long
 #define loop (int i=0;i<n;i++)
 const int mod=1e9+7;
+const ll INF = LLONG_MAX;
+
 
 
 
@@ -199,92 +201,56 @@ public:
     }
 };
 
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int N, M;
-    cin >> N >> M;
+    ll X;
+    cin >> N >> M >> X;
 
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
+    vector<vector<int>> g1(N + 1);
+    vector<vector<int>> g2(N + 1);
 
     for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
+        int a, b;
+        cin >> a >> b;
+        g1[a].push_back(b);
+        g2[b].push_back(a);
+    }
 
-        edges.push_back({u, v});
+    vector<vector<ll>> d(N + 1, vector<ll>(2, INF));
+    d[1][0] = 0;
 
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+    priority_queue<pair<ll, pair<int, int>>, vector<pair<ll, pair<int, int>>>, greater<>> pq;
+    pq.push({0, {1, 0}});
+
+    while (!pq.empty()) {
+        auto [c, s] = pq.top();
+        auto [v, o] = s;
+        pq.pop();
+
+        if (v == N) {
+            cout << c << '\n';
+            return 0;
+        }
+
+        if (c > d[v][o]) continue;
+
+        const auto& g = (o == 0) ? g1 : g2;
+        for (int u : g[v]) {
+            ll nc = c + 1;
+            if (nc < d[u][o]) {
+                d[u][o] = nc;
+                pq.push({nc, {u, o}});
+            }
+        }
+
+        ll fc = c + X;
+        int no = 1 - o;
+        if (fc < d[v][no]) {
+            d[v][no] = fc;
+            pq.push({fc, {v, no}});
         }
     }
 
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        }
-    }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
+    cout << -1 << '\n';
     return 0;
 }

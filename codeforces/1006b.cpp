@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define loop (int i=0;i<n;i++)
+#define nl (int i=0;i<n;i++)
 const int mod=1e9+7;
 
 
@@ -199,92 +199,40 @@ public:
     }
 };
 
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    int t;
+    cin >> t;
+    while (t--) {
+        int b;
+        cin >> b;
+        string c;
+        cin >> c;
 
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+        int d = 0, e = 0; 
+        
+        for (char f : c) {
+            if (f == '-')
+            {
+                 d++;
+            }
+            else if (f == '_')
+            {
+                 e++;
+            }
         }
-    }
-
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
+        
+        if (d < 2 || e < 1) 
         {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+            cout<<0<<endl;
+            continue;
         }
-    }
 
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
+        long long g = d/2; 
+        long long h = d-g; 
+        long long i=g*h*e; 
 
+        cout<<i<<endl;
+    }
+    
     return 0;
 }

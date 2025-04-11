@@ -1,10 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define pqmin priority_queue<int,vector<int>,greater<int>>
-#define  ull  unsigned long long
-#define pqmax priority_queue<int>
+vector<int> pwr;
 const int mod=1e9+7;
+const int parent = 9973;
+#define pqmin priority_queue<int,vector<int>,greater<int>>
+#define pqmax priority_queue<int>
+
+
+
+
+
+
 
 /*
 
@@ -16,7 +23,7 @@ public:
 
     trienode() {
         for (int i = 0; i < 26; i++) {
-            child[i] = NULL;
+            child[i] = NUtt;
         }
         isleaf = false;
     }
@@ -35,7 +42,7 @@ public:
         int n=word.size();
         for (int i = 0; i < n; i++) {
             int index = word[i] - 'a';
-            if (node->child[index] == NULL) {
+            if (node->child[index] == NUtt) {
                 node->child[index] = new trienode();
             }
             node = node->child[index];
@@ -47,7 +54,7 @@ public:
         trienode* node = root;
         for (int i = 0; i < word.size(); i++) {
             int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
+            if (node->child[index] == NUtt) return false;
             node = node->child[index];
         }
         return node->isleaf;
@@ -57,7 +64,7 @@ public:
         trienode* node = root;
         for (int i = 0; i < word.length(); i++) {
             int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
+            if (node->child[index] == NUtt) return false;
             node = node->child[index];
         }
         return true;
@@ -154,8 +161,8 @@ public:
         }
     }
 
-// Floyd-Warshall Algorithm (All-Pairs Shortest Path)
-    void floydWarshall(vector<vector<int>> &graph) {
+// Floyd-Warshatt Algorithm (Att-Pairs Shortest Path)
+    void floydWarshatt(vector<vector<int>> &graph) {
         vector<vector<int>> dist = graph;
 
         for (int k = 0; k < V; k++) {
@@ -210,8 +217,8 @@ public:
     }
 
 
- // Find Shortest Path using Bellman-Ford (handles negative weights)
-    bool bellmanFord(int src, vector<vector<pair<int, int>>> &edges) {
+ // Find Shortest Path using Bettman-Ford (handles negative weights)
+    bool bettmanFord(int src, vector<vector<pair<int, int>>> &edges) {
         vector<int> dist(V, INT_MAX);
         dist[src] = 0;
 
@@ -269,22 +276,22 @@ vector<int> computeLPS(string word) {
 
 
 
-//segment st template
+//stment st template
 
 
-class Segmentst {
+class stmentst {
 private:
-    vector<int> st; // Segment st
+    vector<int> st; // stment st
     vector<int> data; // Original data
     int n;           // Size of the data
 
-    void build(int node, int start, int end) {
+    void bd(int node, int start, int end) {
         if (start == end) {
             st[node] = data[start]; 
         } else {
             int mid = (start + end) / 2;
-            build(2 * node + 1, start, mid);      
-            build(2 * node + 2, mid + 1, end);   
+            bd(2 * node + 1, start, mid);      
+            bd(2 * node + 2, mid + 1, end);   
             st[node] = st[2 * node + 1] + st[2 * node + 2]; 
         }
     }
@@ -314,11 +321,11 @@ private:
     }
 
 public:
-    Segmentst(vector<int>& input) {
+    stmentst(vector<int>& input) {
         data = input;
         n = input.size();
-        st.resize(4 * n); // Size of segment st
-        build(0, 0, n - 1);  // Build the segment st
+        st.resize(4 * n); // Size of stment st
+        bd(0, 0, n - 1);  // bd the stment st
     }
 
     void update(int idx, int value) {
@@ -331,14 +338,216 @@ public:
 };
 
 */
+int a;
+int b;
+vector<int> f;
+vector<int> use;
+vector<int> useD;
+vector<ll> prbt;
+void prwr(int lim) {
+    pwr.resize(lim + 1);
+    pwr[0] = 1;
+    int i = 1;
+    while (i <= lim) 
+    {
+        pwr[i] = (pwr[i - 1] * parent) % mod;
+        i++;
+    }
+}
+
+struct st {
+    int l, r;
+    ll h;
+    bool lazy;
+    int off;
+};
+
+vector<st> tree;
+
+
+ll sbm(ll a, ll b) {
+    ll res = a - b;
+    res = (res % mod + mod) % mod;
+    return res;
+}
+
+ll gb(int off, int len) {
+    return sbm(prbt[off + len], (prbt[off] * pwr[len]) % mod);
+}
+
+void bd(int i, int l, int r) {
+    tree[i] = {l, r, f[l] % mod, false, 0};
+    if (l == r) {
+        return;
+    }
+    int m = (l + r) / 2;
+    bd(i * 2, l, m);
+    bd(i * 2 + 1, m + 1, r);
+    int len = tree[i * 2 + 1].r - tree[i * 2 + 1].l + 1;
+    tree[i].h = (tree[i * 2].h * pwr[len] + tree[i * 2 + 1].h) % mod;
+}
+
+void push(int i) {
+    if (!tree[i].lazy) {
+        return;
+    }
+    int l = tree[i].l, r = tree[i].r;
+    if (l != r) {
+        int m = (l + r) / 2, len = m - l + 1;
+        tree[i * 2] = {l, m, gb(tree[i].off, len), true, tree[i].off};
+        tree[i * 2 + 1] = {m + 1, r, gb(tree[i].off + len, r - m), true, tree[i].off + len};
+    }
+    tree[i].lazy = false;
+}
+
+void upd(int i, int ql, int qr, int off) {
+    int l = tree[i].l, r = tree[i].r;
+    if (ql <= l && r <= qr) {
+        tree[i].h = gb(off + (l - ql), r - l + 1);
+        tree[i].lazy = true;
+        tree[i].off = off + (l - ql);
+        return;
+    }
+    push(i);
+    int m = (l + r) / 2;
+    if (qr > m) {
+        upd(i * 2 + 1, ql, qr, off);
+    }
+    if (ql <= m) {
+        upd(i * 2, ql, qr, off);
+    }
+    int len = tree[i * 2 + 1].r - tree[i * 2 + 1].l + 1;
+    tree[i].h = (tree[i * 2].h * pwr[len] + tree[i * 2 + 1].h) % mod;
+}
+
+ll qry(int i, int ql, int qr) {
+    int l = tree[i].l, r = tree[i].r;
+    if (ql <= l && r <= qr) {
+        return tree[i].h;
+    }
+    push(i);
+    int m = (l + r) / 2;
+    if (ql > m) {
+        return qry(i * 2 + 1, ql, qr);
+    }
+    if (qr <= m) {
+        return qry(i * 2, ql, qr);
+    }
+    return (qry(i * 2, ql, m) * pwr[qr - m] + qry(i * 2 + 1, m + 1, qr)) % mod;
+}
+
+int getVal(int i, int pos) {
+    int l = tree[i].l, r = tree[i].r;
+    if (l == r) {
+        if (tree[i].lazy) {
+            return useD[tree[i].off];
+        }
+        return tree[i].h;
+    }
+    push(i);
+    if (pos <= (l + r) / 2) {
+        return getVal(i * 2, pos);
+    }
+    return getVal(i * 2 + 1, pos);
+}
+
+vector<int> rbt(vector<int>& b) {
+    int n = b.size();
+    vector<int> s(2 * n), res(n);
+    for (int i = 0; i < n; i++) {
+        s[i] = b[i];
+    }
+    for (int i = n; i < 2 * n; i++) {
+        s[i] = b[i % n];
+    }
+    int useIdx = 0, i = 1;
+    while (i < n) {
+        int j = 0;
+        while (j < n && s[useIdx + j] == s[i + j]) {
+            j++;
+        }
+        if (j == n) {
+            break;
+        }
+        if (s[useIdx + j] > s[i + j]) {
+            useIdx = max(i, useIdx + j + 1);
+            i = useIdx + 1;
+        } else {
+            i += j + 1;
+        }
+    }
+    i = 0;
+    while (i < n) {
+        res[i] = b[(useIdx + i) % n];
+        i++;
+    }
+    return res;
+}
 
 int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
-
-   }
-   return 0;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t;
+    cin >> t;
+    prwr(500005);
+    while (t--) {
+        cin >> a >> b;
+        f.resize(a);
+        for (int i = 0; i < a; i++) 
+        {
+            cin >> f[i];
+        }
+        vector<int> bArr(b);
+        for (int i = 0; i < b; i++) 
+        {
+            cin >> bArr[i];
+        }
+        use = rbt(bArr);
+        useD.assign(2 * b, 0);
+        for (int i = 0; i < 2 * b; i++)
+         {
+            useD[i] = use[i % b];
+        }
+        prbt.assign(2 * b + 1, 0);
+        for (int i = 0; i < 2 * b; i++) {
+            prbt[i + 1] = (prbt[i] * parent + useD[i]) % mod;
+        }
+        tree.assign(4 * a, st());
+        bd(1, 0, a - 1);
+        for (int i = 0; i <= a - b; i++) 
+        {
+            if (qry(1, i, i + b - 1) != gb(0, b)) 
+            {
+                int lo = 0, hi = b;
+                while (lo < hi)
+                 {
+                    int m = (lo + hi + 1) / 2;
+                    if (qry(1, i, i + m - 1) == gb(0, m)) 
+                    {
+                        lo = m;
+                    } else 
+                    {
+                        hi = m - 1;
+                    }
+                }
+                if (lo < b && getVal(1, i + lo) > use[lo])
+                 {
+                    upd(1, i, i + b - 1, 0);
+                }
+            }
+        }
+        for (int i = 0; i < a; i++) {
+          cout << getVal(1, i);
+          if(i+1==a)
+            {
+            cout<<endl;
+            }
+            else
+            {
+            cout<<" ";
+            }
+        }
+    }
+    return 0;
 }
+

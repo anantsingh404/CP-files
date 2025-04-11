@@ -4,7 +4,10 @@ using namespace std;
 #define pqmin priority_queue<int,vector<int>,greater<int>>
 #define  ull  unsigned long long
 #define pqmax priority_queue<int>
-const int mod=1e9+7;
+const long long MOD=998244353;
+
+
+
 
 /*
 
@@ -331,14 +334,39 @@ public:
 };
 
 */
-
+long long pw(long long base, long long exp)
+ {
+    long long result = 1;
+    base =base%MOD;
+    while (exp>0) 
+    {
+        if (exp%2==1)
+        {
+            result=(result*base)%MOD;
+        }
+        base=(base*base)%MOD;
+        exp=exp/2;
+    }
+    return result;
+}
 int main() {
    ll t;
    cin>>t;
    while(t--)
    {
-     
-
+    int N;
+    cin >> N;
+    if (N%2==0) 
+    {
+        int exponent = (N/2)-1;
+        long long ans =(1ll*3*pw(4, exponent))%MOD;
+        cout<<ans<<endl;
+    } else 
+    {
+        int exponent = (N-1)/2;
+        long long ans =pw(4,exponent)%MOD;
+        cout<<ans<<endl;
+    }
    }
    return 0;
 }

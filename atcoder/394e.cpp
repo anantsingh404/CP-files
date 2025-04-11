@@ -3,6 +3,8 @@ using namespace std;
 #define ll long long
 #define loop (int i=0;i<n;i++)
 const int mod=1e9+7;
+const int INF = INT_MAX;
+const int ALPHABET_SIZE = 26;
 
 
 
@@ -199,92 +201,82 @@ public:
     }
 };
 
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
-        }
-    }
-
+    int N;
+    cin >> N;
+    vector<vector<char>> adjj(N, vector<char>(N));
     
-    vector<int> rootComponents;
+    // Read the adjacency matrix
     for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
+        for (int j = 0; j < N; ++j) {
+            cin >> adjj[i][j];
         }
     }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+    
+    // Precompute incoming and outgoing edges for each vertex and letter
+    vector<vector<vector<int>>> in_edges(N, vector<vector<int>>(ALPHABET_SIZE));
+    vector<vector<vector<int>>> out_edges(N, vector<vector<int>>(ALPHABET_SIZE));
+    
+    for (int u = 0; u < N; ++u) {
+        for (int v = 0; v < N; ++v) {
+            if (adjj[u][v] != '-') {
+                char c = adjj[u][v];
+                out_edges[u][c - 'a'].push_back(v); // Outgoing edge from u with label c
+                in_edges[v][c - 'a'].push_back(u);  // Incoming edge to v with label c
+            }
         }
     }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
+    
+    // Result matrix
+    vector<vector<int>> result(N, vector<int>(N, INF));
+    
+    // BFS queue: {u, v, distance}
+    deque<tuple<int, int, int>> q;
+    
+    // Initialize BFS with base cases
+    for (int u = 0; u < N; ++u) {
+        result[u][u] = 0; // Empty path is a palindrome
+        q.push_back({u, u, 0});
+        
+        for (int v = 0; v < N; ++v) {
+            if (adjj[u][v] != '-') {
+                if (result[u][v] > 1) {
+                    result[u][v] = 1; // One-letter palindrome
+                    q.push_back({u, v, 1});
+                }
+            }
+        }
     }
-
+    
+    // BFS to find shortest palindromic paths
+    while (!q.empty()) {
+        auto [u, v, dist] = q.front();
+        q.pop_front();
+        
+        // Explore all possible transitions
+        for (int c = 0; c < ALPHABET_SIZE; ++c) {
+            for (int u_prev : in_edges[u][c]) {
+                for (int v_next : out_edges[v][c]) {
+                    if (result[u_prev][v_next] > dist + 2) {
+                        result[u_prev][v_next] = dist + 2; // Extend the path by 2 edges
+                        q.push_back({u_prev, v_next, dist + 2});
+                    }
+                }
+            }
+        }
+    }
+    
+    // Output the result
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (result[i][j] == INF) {
+                cout << -1 << " ";
+            } else {
+                cout << result[i][j] << " ";
+            }
+        }
+        cout << endl;
+    }
+    
     return 0;
 }

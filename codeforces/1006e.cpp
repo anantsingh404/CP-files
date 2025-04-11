@@ -1,9 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define loop (int i=0;i<n;i++)
+#define nl (int i=0;i<n;i++)
 const int mod=1e9+7;
-
+const int mx = 100000, st = 500, inf = 1e9;
+vector<int> dp(mx + 1, inf), pr(mx + 1, -1), ch(mx + 1, -1), tr(st + 1, 0);
 
 
 
@@ -151,20 +152,21 @@ private:
         if (start == end) {
             tree[node] = data[start]; 
         } else {
-            int mid = (start + end) / 2;
-            build(2 * node + 1, start, mid);      
-            build(2 * node + 2, mid + 1, end);   
-            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]; 
+            int mid=(start+end)/2;
+            build(2*node+1,start,mid);      
+            build(2 * node+2, mid+1,end);   
+            tree[node]=tree[2*node+1]+tree[2*node+2]; 
         }
     }
 
     void update(int node, int start, int end, int idx, int value) {
-        if (start == end) {
-            data[idx] = value; // Update the original data
-            tree[node] = value; // Update the tree
+        if (start == end)
+        {
+            data[idx]=value; // Update the original data
+            tree[node]=value; // Update the tree
         } else {
-            int mid = (start + end) / 2;
-            if (start <= idx && idx <= mid) {
+            int mid=(start+end)/2;
+            if (start<=idx && idx<=mid){
                 update(2 * node + 1, start, mid, idx, value); // Left child
             } else {
                 update(2 * node + 2, mid + 1, end, idx, value); // Right child
@@ -200,91 +202,50 @@ public:
 };
 
 
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
-        }
-    }
-
     
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
+    int a;
+    cin >> a;
+    
+    while (a--) {
+        int b;
+        long long c;
+        cin >> b >> c;
+        int d = b - 1;
+        int e = 1;
+        while (e <= b) 
         {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+            int f = e - 1;
+            if ((f | d) == d) 
+            {
+                cout << c;
+                if (e == b)
+                {
+                     cout << endl;
+                }
+                else
+                {
+
+                cout << " ";
+                }
+            } 
+            else
+             {
+                cout << 0;
+                if (e == b) 
+                {
+                    cout << endl;
+                }
+                else 
+                {
+                    cout<<" ";
+                }
+            }
+            e++;
         }
     }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
     return 0;
 }
+    

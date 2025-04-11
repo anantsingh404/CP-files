@@ -198,93 +198,55 @@ public:
         return query(0, 0, n - 1, l, r);
     }
 };
+bool feasible(ll H, const vector<ll>& U, const vector<ll>& D, ll X) {
+    ll low = max(0LL, H - D[0]);
+    ll high = U[0];
+    if (low > high) return false;
 
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
+    for (size_t i = 1; i < U.size(); ++i) {
+        ll a = max(0LL, H - D[i]);
+        ll b = U[i];
+        low = max(a, low - X);
+        high = min(b, high + X);
+        if (low > high) return false;
     }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
+    return true;
+}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int N, M;
-    cin >> N >> M;
+    ll N, X;
+    cin >> N >> X;
 
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
+    vector<ll> U(N), D(N);
+    for (ll i = 0; i < N; ++i) {
+        cin >> U[i] >> D[i];
+    }
 
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
+    ll left = 0;
+    ll right = U[0] + D[0];
+    for (ll i = 1; i < N; ++i) {
+        right = min(right, U[i] + D[i]);
+    }
 
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
+    ll best_H = 0;
+    while (left <= right) {
+        ll mid = (left + right) / 2;
+        if (feasible(mid, U, D, X)) {
+            best_H = mid;
+            left = mid + 1;
         } else {
-            component[dsu.find(u)].push_back(i);
+            right = mid - 1;
         }
     }
 
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
+    ll total = 0;
+    for (ll i = 0; i < N; ++i) {
+        total += U[i] - (best_H - D[i]);
     }
 
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        }
-    }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
+    cout << total << '\n';
     return 0;
 }

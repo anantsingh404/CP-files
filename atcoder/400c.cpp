@@ -200,91 +200,45 @@ public:
 };
 
 
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+   ll N;
+   cin>>N;
+   ll count = 0;
+   ll pow2k = 2;
 
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
-        }
-    }
-
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
+   for (int k = 1; pow2k <= N; pow2k <<= 1, k++)
+    {
+       ll M = N / pow2k;
+       if (M == 0)
+       {
+          break;
+       }
+       ll low = 1, high = M;
+       ll s_max = 0;
+       while (low <= high)
         {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        }
-    }
+           ll mid = (low + high) / 2;
+           if (mid > M / mid) 
+           {
+               high = mid - 1;
+           } 
+           else 
+           {
+               ll mid_sq = mid * mid;
+               if (mid_sq<=M) 
+               {
+                   s_max = mid;
+                   low = mid + 1;
+               }
+             else
+            {
+                   high = mid - 1;
+            }
+           }
+       }
+       ll cnt = (s_max+1)/2;
+       count += cnt;
+   }
 
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
-    return 0;
+   cout<<count;
 }

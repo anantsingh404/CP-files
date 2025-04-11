@@ -2,9 +2,11 @@
 using namespace std;
 #define ll long long
 #define pqmin priority_queue<int,vector<int>,greater<int>>
-#define  ull  unsigned long long
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
+
+
+
 
 /*
 
@@ -332,13 +334,135 @@ public:
 
 */
 
-int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
+#include <bits/stdc++.h>
+using namespace std;
 
-   }
-   return 0;
+// Precompute the lexicographically smallest cyclic rotation of B
+vector<int> getSmallestRotation(const vector<int>& B) {
+    int M = B.size();
+    string s;
+    for (int x : B) s += to_string(x) + ","; // Convert B to a string for comparison
+
+    // Find the smallest rotation using Booth's algorithm
+    string t = s + s;
+    int n = t.size();
+    vector<int> f(n, -1);
+    int k = 0;
+    for (int j = 1; j < n; j++) {
+        int i = f[j - k - 1];
+        while (i != -1 && t[j] != t[k + i + 1]) {
+            if (t[j] < t[k + i + 1]) k = j - i - 1;
+            i = f[i];
+        }
+        if (t[j] != t[k + i + 1]) {
+            if (t[j] < t[k]) k = j;
+            f[j - k] = -1;
+        } else {
+            f[j - k] = i + 1;
+        }
+    }
+
+    // Extract the smallest rotation
+    vector<int> smallestRotation(B.begin() + k, B.end());
+    smallestRotation.insert(smallestRotation.end(), B.begin(), B.begin() + k);
+    return smallestRotation;
+}
+
+// Segment Tree with Lazy Propagation
+struct SegmentTree {
+    int n;
+    vector<int> tree, lazy;
+
+    SegmentTree(int size) {
+        n = size;
+        tree.assign(4 * n, 0);
+        lazy.assign(4 * n, -1);
+    }
+
+    void pushDown(int node, int left, int right) {
+        if (lazy[node] != -1) {
+            tree[node] = lazy[node];
+            if (left != right) {
+                lazy[2 * node + 1] = lazy[node];
+                lazy[2 * node + 2] = lazy[node];
+            }
+            lazy[node] = -1;
+        }
+    }
+
+    void updateRange(int node, int left, int right, int l, int r, int val) {
+        pushDown(node, left, right);
+        if (left > r || right < l) return;
+        if (left >= l && right <= r) {
+            lazy[node] = val;
+            pushDown(node, left, right);
+            return;
+        }
+        int mid = (left + right) / 2;
+        updateRange(2 * node + 1, left, mid, l, r, val);
+        updateRange(2 * node + 2, mid + 1, right, l, r, val);
+        tree[node] = min(tree[2 * node + 1], tree[2 * node + 2]);
+    }
+
+    int query(int node, int left, int right, int l, int r) {
+        pushDown(node, left, right);
+        if (left > r || right < l) return INT_MAX;
+        if (left >= l && right <= r) return tree[node];
+        int mid = (left + right) / 2;
+        return min(query(2 * node + 1, left, mid, l, r),
+                   query(2 * node + 2, mid + 1, right, l, r));
+    }
+};
+
+// Main function to solve the problem
+vector<int> solve(int N, int M, vector<int>& A, vector<int>& B) {
+    // Step 1: Find the lexicographically smallest rotation of B
+    vector<int> bestB = getSmallestRotation(B);
+
+    // Step 2: Initialize the segment tree
+    SegmentTree st(N);
+    for (int i = 0; i < N; i++) st.updateRange(0, 0, N - 1, i, i, A[i]);
+
+    // Step 3: Iterate through all possible subarrays of length M
+    for (int i = 0; i <= N - M; i++) {
+        // Check if the current subarray can be replaced with bestB
+        bool canReplace = true;
+        for (int j = 0; j < M; j++) {
+            if (st.query(0, 0, N - 1, i + j, i + j) < bestB[j]) {
+                canReplace = false;
+                break;
+            }
+        }
+
+        // If replacement is beneficial, update the segment tree
+        if (canReplace) {
+            for (int j = 0; j < M; j++) {
+                st.updateRange(0, 0, N - 1, i + j, i + j, bestB[j]);
+            }
+        }
+    }
+
+    // Step 4: Extract the final array from the segment tree
+    vector<int> result(N);
+    for (int i = 0; i < N; i++) {
+        result[i] = st.query(0, 0, N - 1, i, i);
+    }
+    return result;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int N, M;
+        cin >> N >> M;
+        vector<int> A(N), B(M);
+        for (int i = 0; i < N; i++) cin >> A[i];
+        for (int i = 0; i < M; i++) cin >> B[i];
+
+        vector<int> result = solve(N, M, A, B);
+        for (int x : result) cout << x << " ";
+        cout << endl;
+    }
+    return 0;
 }

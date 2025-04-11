@@ -2,9 +2,11 @@
 using namespace std;
 #define ll long long
 #define pqmin priority_queue<int,vector<int>,greater<int>>
-#define  ull  unsigned long long
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
+
+
+
 
 /*
 
@@ -331,14 +333,170 @@ public:
 };
 
 */
+struct G {
+    int L, R; 
+    int d;    
+    int id;   
+};
 
-int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
+struct SC {
+    bool operator()(const G &a, const G &b) const {
+        return a.L < b.L;
+    }
+};
 
-   }
-   return 0;
+struct PC {
+    bool operator()(const G &a, const G &b) const {
+        if (a.d != b.d) {
+            return a.d < b.d; 
+        }
+        return a.L > b.L;
+    }
+};
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int a;
+    cin >> a;
+    while (a--) {
+        int b;
+        cin >> b;
+
+        if (b == 1) {
+            int c;
+            cin >> c;
+            cout << "YES\n";
+            continue;
+        }
+
+        vector<int> d(b + 1);
+         vector<bool> n;
+        n.assign(2 * b, false);
+        int e = 1;
+        while (e <= b) {
+            cin >> d[e];
+            e++;
+        }
+
+        vector<int> f(b + 1, 0);
+        int g = 1;
+        while (g <= b) {
+            int h = d[g];
+            f[h] = g;
+            g++;
+        }
+        priority_queue<G, vector<G>, PC> m;
+        set<G, SC> l;
+        bool i = true;
+
+        if (f[1] != 1 && f[1] != b) {
+            cout << "NO\n";
+            continue;
+        }
+
+        if (f[1] == 1)
+         {
+            if (f[2] != b) 
+            {
+                cout << "NO\n";
+                continue;
+            }
+        } 
+        else 
+        {
+            if (f[2] != 1) {
+                cout << "NO\n";
+                continue;
+            }
+        }
+    
+        int j = min(f[1], f[2]);
+        int k = max(f[1], f[2]);
+        int o = 0;
+        auto ag = [&](int p, int q) {
+            if (q - p >= 2) {
+                G g;
+                g.L = p;
+                g.R = q;
+                g.d = (q - p) / 2;
+                g.id = o++;
+                l.insert(g);
+                m.push(g);
+                n[g.id] = true;
+            }
+        };
+
+        ag(j, k);
+
+        int r = 3;
+        while (r <= b) {
+            int s = f[r];
+
+            while (!m.empty() && !n[m.top().id]) {
+                m.pop();
+            }
+
+            int t = -1;
+            if (!m.empty()) {
+                t = m.top().d;
+            } else {
+                i = false;
+                break;
+            }
+
+            G u;
+            u.L = s;
+            u.R = 0;
+            u.d = 0;
+            u.id = 0;
+            auto v = l.lower_bound(u);
+            if (v == l.begin()) {
+                i = false;
+                break;
+            }
+            v--;
+            G w = *v;
+            if (!(w.L < s && s < w.R)) {
+                i = false;
+                break;
+            }
+
+            if (w.d < t) {
+                i = false;
+                break;
+            }
+
+            int x = w.L + (w.R - w.L) / 2;
+            if ((w.R - w.L) % 2 == 0) {
+                if (s != x) {
+                    i = false;
+                    break;
+                }
+            } else {
+                if (s != x && s != x + 1) {
+                    i = false;
+                    break;
+                }
+            }
+
+            n[w.id] = false;
+            l.erase(v);
+
+            ag(w.L, s);
+            ag(s, w.R);
+
+            r++;
+        }
+
+        if (i)
+         {
+            cout << "YES\n";
+        } else 
+        {
+            cout << "NO\n";
+        }
+    }
+    return 0;
 }

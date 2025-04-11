@@ -198,93 +198,83 @@ public:
         return query(0, 0, n - 1, l, r);
     }
 };
-
-
 struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
+    vector<int> p;
+    vector<int> r;
+
+    DSU(int n) : p(n + 1), r(n + 1, 0) {
+        iota(p.begin(), p.end(), 0);
     }
 
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
+    int f(int x) {
+        if (p[x] != x) {
+            int t = f(p[x]);
+            r[x] ^= r[p[x]];
+            p[x] = t;
+        }
+        return p[x];
+    }
+
+    bool u(int x, int y, int z) {
+        int a = f(x);
+        int b = f(y);
+
+        if (a == b) {
+            if ((r[x] ^ r[y]) != z) {
+                return false;
+            }
+            return true;
+        }
+
+        p[b] = a;
+        r[b] = r[x] ^ r[y] ^ z;
         return true;
     }
 };
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int N, M;
     cin >> N >> M;
 
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
+    DSU d(N);
 
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
+    bool g = true;
 
-        edges.push_back({u, v});
+    int i = 0;
+    while (i < M) {
+        int x, y, z;
+        cin >> x >> y >> z;
 
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+        if (!d.u(x, y, z)) {
+            g = false;
+            break;
         }
+        i++;
     }
 
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
+    if (!g) {
+        cout << -1 << endl;
         return 0;
     }
 
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
+    vector<int> a(N + 1, 0);
 
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+    i = 1;
+    while (i <= N) {
+        if (d.f(i) == i) {
+            a[i] = 0;
+        } else {
+            a[i] = d.r[i];
         }
+        i++;
     }
 
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
+    i = 1;
+    while (i <= N) {
+        cout << a[i] << " ";
+        i++;
     }
+    cout << endl;
 
     return 0;
 }

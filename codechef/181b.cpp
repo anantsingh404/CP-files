@@ -338,7 +338,28 @@ int main() {
    while(t--)
    {
      
-
+    int n;
+    string s;
+    cin>>n>>s;
+    int c0 = 0,c1 = 0;
+    int vp = 0;
+    for (int i = 0; i < n; ++i)
+     {
+        if (s[i] == '0') 
+        {
+            c0++;
+        }
+        else
+        {
+         c1++;
+        }
+        if (c0 == c1)
+         {
+            vp++;
+        }
+    }
+    long long result=(1ll<<vp);
+    cout<<result<<endl;
    }
    return 0;
 }

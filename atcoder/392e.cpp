@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -200,24 +201,40 @@ public:
 };
 
 
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
+
+struct ft {
+    vector<int> tree;
+    int size;
+
+    ft(int n) : size(n), tree(n + 2, 0) {}
+
+    void update(int idx, int delta) {
+        while (idx <= size) {
+            tree[idx] += delta;
+            idx += idx & -idx;
+        }
     }
 
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
+    int query(int idx) {
+        int sum = 0;
+        while (idx > 0) {
+            sum += tree[idx];
+            idx -= idx & -idx;
+        }
+        return sum;
+    }
+
+    int findKthEmpty(int k) {
+        int low = 1, high = size;
+        while (low < high) {
+            int mid = (low + high) / 2;
+            if (query(mid) >= k) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
     }
 };
 
@@ -225,66 +242,29 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
-        }
+    int N;
+    cin >> N;
+    vector<int> P(N + 1);
+    for (int i = 1; i <= N; ++i) {
+        cin >> P[i];
     }
 
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
+    ft bit(N);
+    for (int i = 1; i <= N; ++i) {
+        bit.update(i, 1); 
     }
 
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
+    vector<int> A(N + 1);
+    for (int i = N; i >= 1; --i) {
+        int pos = bit.findKthEmpty(P[i]); 
+        A[pos] = i; 
+        bit.update(pos, -1); 
     }
 
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        }
+    for (int i = 1; i <= N; ++i) {
+        cout << A[i] << " ";
     }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
+    cout<<endl;
 
     return 0;
 }

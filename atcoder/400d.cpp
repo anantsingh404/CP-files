@@ -3,6 +3,8 @@ using namespace std;
 #define ll long long
 #define loop (int i=0;i<n;i++)
 const int mod=1e9+7;
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {-1, 0, 1, 0};
 
 
 
@@ -198,93 +200,66 @@ public:
         return query(0, 0, n - 1, l, r);
     }
 };
-
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+    int H, W;
+    cin >> H >> W;
+    vector<string> S(H);
+    for (int i = 0; i < H; ++i) {
+        cin >> S[i];
+    }
+    int A, B, C, D;
+    cin >> A >> B >> C >> D;
+    A--; B--; C--; D--;
+    vector<vector<int>> dist(H, vector<int>(W, INT_MAX));
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
+    dist[A][B] = 0;
+    pq.push({0, {A, B}});
+    while (!pq.empty()) {
+        auto [kicks, pos] = pq.top();
+        auto [i, j] = pos;
+        pq.pop();
+        if (i == C && j == D) {
+            cout << kicks << endl;
+            return 0;
         }
-    }
-
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
+        if (kicks > dist[i][j])
         {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+            continue;
         } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+        for (int d = 0; d < 4; ++d)
+        {
+            int ni = i + dy[d];
+            int nj = j + dx[d];
+            if (ni >= 0 && ni < H && nj >= 0 && nj < W && S[ni][nj] == '.') 
+            {
+                if (dist[ni][nj] > kicks) 
+                {
+                    dist[ni][nj] = kicks;
+                    pq.push({kicks, {ni, nj}});
+                }
+            }
+        }
+        for (int d = 0; d < 4; ++d) 
+        {
+            int ci = i;
+            int cj = j;
+            for (int step = 1; step <= 2; ++step) 
+            {
+                ci += dy[d];
+                cj += dx[d];
+                if (ci < 0 || ci >= H || cj < 0 || cj >= W)
+                {
+                     break;
+                }
+                if (dist[ci][cj] > kicks + 1) 
+                {
+                    dist[ci][cj] = kicks + 1;
+                    pq.push({kicks + 1, {ci, cj}});
+                }
+            }
         }
     }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
+    
+    cout <<-1<< endl;
     return 0;
 }

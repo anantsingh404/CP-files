@@ -6,6 +6,9 @@ using namespace std;
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
 
+
+
+
 /*
 
 //trie template
@@ -337,8 +340,52 @@ int main() {
    cin>>t;
    while(t--)
    {
-     
-
+    int b, c;
+    cin >> b >> c;
+    int d=(b+1)/2;
+    int e=b-d;
+    int f=b-c;
+    string g,h;
+    if (b==1)
+     {
+        if (c==0) 
+        {
+            cout<<"B"<<endl<<"C"<<endl;
+        } 
+        else if(c==1) 
+        {
+            cout<<"B"<<endl<<"B"<<endl;
+        } 
+        else 
+        {
+            cout<<"-1"<<endl;
+        }
+        continue;
+    }
+    if (c<e || c>b)
+     {
+        cout<<"-1"<<endl;
+        continue;
+    }
+    for (int i=0;i<b;++i) 
+    {  
+        if(i%2==0)
+        {
+            g=g+'A';
+        }
+        else
+        {
+            g=g+'B';
+        }
+       
+    }
+    h=g;
+    int i=0;
+    for (int j=0;j<b && i<f;j=j+2)
+    {
+        h[j]='C';
+        i++;
+    }
+    cout<<g<<endl<<h<<endl;
    }
-   return 0;
 }

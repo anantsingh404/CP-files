@@ -337,8 +337,49 @@ int main() {
    cin>>t;
    while(t--)
    {
-     
-
+     int n;
+     cin>>n;
+     vector<int>dp(n,0);
+     for(int i=0;i<n;i++)
+     {
+        cin>>dp[i];
+     }
+     sort(dp.begin(),dp.end());
+     if(n==1)
+     {
+        int sum=2*dp[0];
+        if(sum==0)
+        {
+            cout<<-1<<endl;
+        }
+        else{
+         cout<<dp[0]<<" "<<dp[0]<<endl;
+        }
+        continue;
+     }
+     bool temp=0;
+     for(int i=0;i<n;i++)
+     {
+        if(dp[i]!=0)
+        {
+            temp=1;
+            break;
+        }
+     }
+     if(temp==0)
+     {
+        cout<<-1<<endl;
+        continue;
+     }
+    
+      if(dp[n-1]>0)
+      {
+        cout<<dp[n-1]<<" "<< dp[n-1]<<endl;
+      }
+      else
+      {
+        cout<<dp[0]<<" "<< dp[0]<<endl;
+      }
    }
-   return 0;
+   
 }

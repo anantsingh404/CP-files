@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define loop (int i=0;i<n;i++)
+#define nl (int i=0;i<n;i++)
 const int mod=1e9+7;
 
 
@@ -17,7 +17,7 @@ public:
         for (int i = 0; i < 26; i++) {
             child[i] = NULL;
         }
-        isleaf = false;
+        isleaf = 0;
     }
 };
 
@@ -39,14 +39,14 @@ public:
             }
             node = node->child[index];
         }
-        node->isleaf = true;
+        node->isleaf = 1;
     }
 
     bool search(string word) {
         trienode* node = root;
         for (int i = 0; i < word.size(); i++) {
             int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
+            if (node->child[index] == NULL) return 0;
             node = node->child[index];
         }
         return node->isleaf;
@@ -56,10 +56,10 @@ public:
         trienode* node = root;
         for (int i = 0; i < word.length(); i++) {
             int index = word[i] - 'a';
-            if (node->child[index] == NULL) return false;
+            if (node->child[index] == NULL) return 0;
             node = node->child[index];
         }
-        return true;
+        return 1;
     }
 
     
@@ -198,93 +198,70 @@ public:
         return query(0, 0, n - 1, l, r);
     }
 };
-
-
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
+    ios_base::sync_with_stdio(0);
     cin.tie(nullptr);
-
-    int N, M;
-    cin >> N >> M;
-
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
-
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
-
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+    //Trie trie;
+    //dsu dset(n);
+    //vector<int> lps = computeLPS(string);
+    //SegmentTree segTree(array);
+    int a;
+    cin >> a;
+    while (a--) 
+    {
+        int b;
+        cin>>b;
+        int c=b;
+        c+=b/2;
+        int g=2*b;
+        int h[c+2][g+1]={0};
+        h[1][0]=1;
+        int i=1;
+        vector<int>d(c+1,0);
+        for (int e=0;e<b;e++)
+         {
+            int f;
+            cin>>f;
+            d[f]++;
         }
-    }
-
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
-        }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
+        while (i<=c) 
         {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
+            int j = 0;
+            while(j<=g)
+             {
+                if (h[i][j]==0)
+                 {
+                    j++;
+                    continue;
+                 }
+                int k=d[i]+j;
+                int l=0;
+                while(l<=k) 
+                {
+                    int m=k-l;
+                    if((l>0 && m<2)  || m%2!=0)
+                    {
+                        l++;
+                        continue;
+                    }
+                    if(l<=g) 
+                    {
+                        h[i+1][l]=1;
+                    }
+                    l++;
+                }
+                j++;
+            }
+            i++;
+        }
+        if (h[c+1][0]>0)
+        {
+            cout<<"Yes"<<endl;
+        }
+        else
+        {
+            cout<<"No"<<endl;
         }
     }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
-    }
-
     return 0;
 }

@@ -1,6 +1,8 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "xstddef": "cpp",
+        "ostream": "cpp"
     }
 }

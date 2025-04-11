@@ -200,5 +200,45 @@ public:
 
 
 int main() {
-   
+    int a;
+    cin >> a;
+
+    vector<vector<int>> b(a);
+    unordered_map<int, vector<int>> c;
+
+    for (int i = 0; i < a; i++) {
+        int d;
+        cin >> d;
+        b[i].resize(d);
+        for (int j = 0; j < d; j++) {
+            cin >> b[i][j];
+            c[b[i][j]].push_back(i);
+        }
+    }
+
+    double e = 0.0;
+
+    for (int i = 0; i < a; i++) {
+        for (int j = i + 1; j < a; j++) {
+            double f = 0.0;
+            unordered_map<int, int> g, h;
+
+            for (int k : b[i]) g[k]++;
+            for (int k : b[j]) h[k]++;
+
+            for (const auto& k : g) {
+                if (h.find(k.first) != h.end()) {
+                    f += (double(g[k.first]) / b[i].size()) * (double(h[k.first]) / b[j].size());
+                }
+            }
+
+            if (f > e) {
+                e = f;
+            }
+        }
+    }
+
+    cout << fixed << setprecision(15) << e << endl;
+    return 0;
 }
+

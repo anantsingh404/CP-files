@@ -2,9 +2,11 @@
 using namespace std;
 #define ll long long
 #define pqmin priority_queue<int,vector<int>,greater<int>>
-#define  ull  unsigned long long
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
+
+
+
 
 /*
 
@@ -332,13 +334,50 @@ public:
 
 */
 
-int main() {
-   ll t;
-   cin>>t;
-   while(t--)
-   {
-     
 
-   }
-   return 0;
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    int t;
+    cin >> t;
+    while(t--){
+      ll n;
+      cin>>n;
+      vector<ll>dp(n,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>dp[i];
+      } 
+      sort(dp.begin(),dp.end());
+      bool ans=false;
+      if(n==1)
+      {
+        cout<<dp[0]<<endl;
+        continue;
+      }
+      for(int i=0;i<n-1;i++)
+      {
+        if(dp[i]==dp[i+1])
+        {    cout<<1<<endl;
+            cout<<dp[i]<<endl;
+           ans=true;
+        }
+        if(ans)
+        {
+            break;
+        }
+      }
+      if(ans)
+      {
+        continue;
+      }
+      else{
+        cout<<-1<<endl;
+      }
+
+    }
+    
+    return 0;
 }

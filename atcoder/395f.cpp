@@ -200,90 +200,51 @@ public:
 };
 
 
-struct DSU {
-    vector<int> parent, size;
-    DSU(int n) : parent(n), size(n, 1) {
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    
-    int find(int x) {
-        if (parent[x] != x) parent[x] = find(parent[x]);  
-        return parent[x];
-    }
-
-    bool unite(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (size[x] < size[y]) swap(x, y);
-        parent[y] = x;
-        size[x] += size[y];
-        return true;
-    }
-};
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    int N, Q;
+    cin >> N >> Q;
 
-    int N, M;
-    cin >> N >> M;
+    vector<int> R(N + 1);      // Physical label of the nest in each slot
+    vector<int> inv(N + 1);    // Inverse mapping: physical label -> slot
+    vector<int> pos(N + 1);    // Current slot of each pigeon
 
-    DSU dsu(N);
-    vector<pair<int, int>> edges, extraEdges;
-    vector<vector<int>> component(N);
+    // Initialize R, inv, and pos
+    for (int i = 1; i <= N; ++i) {
+        R[i] = i;
+        inv[i] = i;
+        pos[i] = i;
+    }
 
-    for (int i = 0; i < M; ++i) {
-        int u, v;
-        cin >> u >> v;
-        --u; --v;  
+    while (Q--) {
+        int type;
+        cin >> type;
 
-        edges.push_back({u, v});
-
-        if (!dsu.unite(u, v)) {
-            extraEdges.push_back({u, v});  
-        } else {
-            component[dsu.find(u)].push_back(i);
+        if (type == 1) {
+            int a, b;
+            cin >> a >> b;
+          
+            pos[a] = inv[b];  
         }
-    }
+         else if (type == 2) {
+            int a, b;
+            cin >> a >> b;
 
-    
-    vector<int> rootComponents;
-    for (int i = 0; i < N; ++i) {
-        if (dsu.find(i) == i) {
-            rootComponents.push_back(i);
+            
+            swap(R[a], R[b]);
+
+            
+            inv[R[a]] = a;
+            inv[R[b]] = b;
+
+            
+        
+           
+            
+        } else if (type == 3) {
+            int a;
+            cin >> a;
+            cout << R[inv[pos[a]]] << '\n';  
         }
-    }
-
-    int components = rootComponents.size();
-    if (components == 1) {
-        cout << "0\n";  
-        return 0;
-    }
-
-    vector<pair<int, pair<int, int>>> operations;
-    int mainComponent = rootComponents[0];
-
-    for (int i = 1; i < components; ++i) {
-        int comp = rootComponents[i];
-
-        if (!component[comp].empty()) 
-        {
-            int edgeIdx = component[comp].back();
-            component[comp].pop_back();
-            operations.push_back({edgeIdx + 1, {edges[edgeIdx].first + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        } 
-        else if (!extraEdges.empty()) {
-            auto [u, v] = extraEdges.back();
-            extraEdges.pop_back();
-            operations.push_back({M - extraEdges.size(), {u + 1, mainComponent + 1}});
-            dsu.unite(comp, mainComponent);
-        }
-    }
-
-    cout << operations.size() << "\n";
-    for (const auto& op : operations) {
-        cout << op.first << " " << op.second.first << " " << op.second.second << "\n";
     }
 
     return 0;

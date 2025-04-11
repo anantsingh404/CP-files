@@ -6,6 +6,9 @@ using namespace std;
 #define pqmax priority_queue<int>
 const int mod=1e9+7;
 
+
+
+
 /*
 
 //trie template
@@ -337,8 +340,30 @@ int main() {
    cin>>t;
    while(t--)
    {
+    int n;
+     cin>>n;
+     vector<int>dp(n,0);
+     for(int i=0;i<n;i++)
+     {
+        cin>>dp[i];
+     }
+     if(n<3)
+     {
+        cout<<dp[0]<<endl;
+        continue;
+     }
      
+     int x=n/2;
+     int maxi=*max_element(dp.begin(),dp.end());
+     for(int i=0;i<n-2;i++)
+     {
+        maxi=max(maxi,dp[i]+x);
+     }
+     for(int i=n-1;i>1;i--)
+     {
+        maxi=max(maxi,dp[i]+x);
+     }
+     cout<<maxi<<endl;
 
    }
-   return 0;
 }
