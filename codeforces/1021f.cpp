@@ -638,9 +638,76 @@ int main() {
     cin >> t; 
     while (t--) 
     {
-        
+      int n,k;
+      cin>>n>>k;
+      vector<int>a(n,0),b(n,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>a[i];
+      }
+      for(int i=0;i<n;i++)
+      {
+        cin>>b[i];
+      }
+      int ans=0;
+      bool temp=1;
+      set<int>st,st1;
 
+      for(int i=0;i<n;i++)
+      {
+        if(a[i]!=-1 && b[i]!=-1)
+        {
+            st.insert(a[i]+b[i]);
+        }
+        else{
+            st1.insert(a[i]);
+      }
     }
-
+      if(st.size()>1)
+      {
+        cout<<0<<endl;
+        continue;
+      }
+      if(st.size()==1)
+      {
+        for(int itr:st1)
+        {
+            if(itr>*st.begin())
+            {
+                temp=0;
+                break;
+            }
+        }
+        int flag=-1;
+        for(int i=0;i<n;i++)
+        {
+            if((a[i]+k)< (*st.begin()))
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1)
+        {
+            cout<<0<<endl;
+            continue;
+        }
+        if(temp==0)
+        {
+            cout<<0<<endl;
+            continue;
+        }
+        else{
+            cout<<1<<endl;
+            continue;
+        }
+      }
+      sort(a.begin(),a.end());
+      int x=a[0]+k;
+      int y=a[n-1];
+      --y;
+      cout<<x-y<<endl;
+    
+    }
     return 0;
 }

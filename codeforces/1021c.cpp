@@ -637,10 +637,71 @@ int main() {
     int t;
     cin >> t; 
     while (t--) 
-    {
-        
+    {  
+        int a, b;
+        cin >> a >> b;
+        vector<int> c(a), d(b);
+        vector<int>p(b+1,a);
+        vector<int>s(b+1,-1);
+        int ans = INT_MAX;
+        int i = 0;
+        while (i < a) {
+            cin >> c[i];
+            i++;
+        }
 
+        i = 0;
+        while (i < b)
+         {
+            cin >>d[i];
+            i++;
+        }
+        p[0]=-1;
+        s[b]=a;
+        int j = 0;
+        i = 0;
+        while(i<a && j<b)
+         {
+            if(c[i]>=d[j]) 
+            {
+                p[j+1]=i;
+                j++;
+            }
+            i++;
+        }
+        j=b-1;
+        i=a-1;
+        while (i>= 0 && j>=0)
+         {
+            if(c[i]>=d[j])
+             {
+                s[j]=i;
+                j--;
+            }
+            i--;
+        }
+
+        if(p[b]<a)
+         {
+            cout<<0<<endl;
+            continue;
+        }
+        i=1;
+        while(i<=b)
+         {
+            if(p[i-1]<s[i]) 
+            {
+                ans=min(ans,d[i-1]);
+            }
+            i++;
+        }
+        if(ans==INT_MAX)
+         {
+            cout<<-1<<endl;
+        } 
+        else{
+            cout<<ans<<endl;
+        }
     }
-
     return 0;
 }

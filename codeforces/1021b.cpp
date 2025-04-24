@@ -638,7 +638,23 @@ int main() {
     cin >> t; 
     while (t--) 
     {
-        
+      int n,m;
+      cin>>n>>m;
+      
+      for(int i=0;i<m;i++)
+      {
+        cout<<i<<' ';
+      }
+      for(int i=m+1;i<n;i++)
+      {
+        cout<<i<<' ';
+      }
+      if(m<n){
+      cout<<m;
+      }
+      cout<<endl;
+
+
 
     }
 

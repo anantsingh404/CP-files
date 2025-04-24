@@ -1990,14 +1990,46 @@ long long modularExponentiation(long long base, long long exponent) {
     return result;
 }
 
-//Main Function:
+//Main function:
+
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-
-    
-
+    ll t;
+    cin >> t;
+    while (t--) {
+        ll n;
+        cin >> n;
+        vector<ll> vec(n);
+        ll op = 0;
+        ll i = 1;
+        while (i <= n) {
+            cin >> vec[i - 1];
+            if (vec[i - 1] == i) {
+                op++;
+            }
+            i++;
+        }
+        
+        ll ans = (op + 1) / 2;
+        
+        if (n & 1) {
+            ll mid = (n + 1) / 2;
+            if (vec[mid - 1] == mid) {
+                ll cond = 0;
+                ll j = 1;
+                while (j < mid) {
+                    if (vec[j - 1] < mid) {
+                        cond++;
+                    }
+                    j++;
+                }
+                if (cond < ans) {
+                    ans = cond;
+                }
+            }
+        }
+        
+        cout << ans << endl;
+    }
     return 0;
-}
+ }

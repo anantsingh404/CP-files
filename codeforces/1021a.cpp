@@ -638,7 +638,35 @@ int main() {
     cin >> t; 
     while (t--) 
     {
-        
+       int n;
+       cin>>n;
+       string s;
+       cin>>s;
+       int count=0;
+       for(int i=0;i<n;i++)
+       {
+           if(s[i]=='1')
+           {
+               count++;
+           }
+       }
+       int ans=0;
+
+       for(int i=0;i<n;i++)
+       {
+           if(s[i]=='0')
+           {
+               ans+=count+1;
+           }
+           else
+           {
+               ans+=max(0,count-1);
+           }
+          
+
+       }
+       cout<<ans<<endl;
+
 
     }
 

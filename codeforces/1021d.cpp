@@ -637,10 +637,84 @@ int main() {
     int t;
     cin >> t; 
     while (t--) 
-    {
-        
-
+    {  
+        int a,b,d,e,f,g,h,j,k,l,m,n,o,q,r,s,u,v,w;
+        cin>>a>>b;
+        vector<int>arr(a);
+        vector<int>pos(a+1);
+        int i=0;
+        while(i<a)
+         {
+            cin>>arr[i];
+            pos[arr[i]]=i+1;
+            i++;
+        }
+        while (b--) 
+        {
+            cin>>d>>e>>f;
+            g=pos[f];
+            if (g<d || g>e)
+            {
+                cout<<-1<<' ';
+                continue;
+            }
+            h=d;
+            i=e;
+            j=0;
+            k=0;
+            l=0;
+            m=0;
+            n=0;
+            while(h<=i)
+             {
+                o=(h + i)/2;
+                if(o==g)
+                {
+                     break;
+                }
+                if(o<g)
+                 {
+                    if(arr[o-1]<f)
+                    {
+                         m++;
+                    }
+                    else
+                    {
+                         j++;
+                          l++;
+                    }
+                    h=o+1;
+                } 
+                else
+               {
+                    if(arr[o-1]>f)
+                    {
+                     n++;
+                    }
+                    else 
+                    { 
+                         k++;
+                         l++;
+                    }
+                    i=o-1;
+                }
+            }
+            q=f-1;
+            r=a-f;
+            s=q-m;
+            u=r-n;
+            if (j>s || k>u)
+            {
+                cout<<-1<<' ';
+            } 
+            else 
+            {   
+                int temp=abs(j-k);
+                temp+=l;
+                cout<<temp<<' ';
+            }
+       }
+       cout<<endl;
     }
-
     return 0;
 }
