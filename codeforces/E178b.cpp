@@ -201,107 +201,6 @@ vector<int> buildLCPArray(string s, vector<int> &suffixArray) {
 
     return lcp;
 }
-// Aho-Corasick Algorithm
-// Usage: Finds all occurrences of multiple patterns in a text efficiently using a trie and failure links.
-// Example: Spam filtering, dictionary matching, bioinformatics, etc.
-// Time Complexity: 
-// - Build: O(M), where M is the total length of all patterns.
-// - Search: O(N + M), where N is the length of the text and M is the total length of all patterns.
-// Space Complexity: O(M * A), where A is the alphabet size.
-
-class AhoCorasick {
-    private:
-        struct TrieNode {
-            vector<TrieNode*> children;
-            TrieNode* failureLink;
-            vector<int> output; // Stores indices of patterns ending at this node
-    
-            TrieNode() : children(26, nullptr), failureLink(nullptr) {}
-        };
-    
-        TrieNode* root;
-        vector<string> patterns;
-    
-    public:
-        AhoCorasick() {
-            root = new TrieNode();
-        }
-    
-        // Insert a pattern into the trie
-        void insert(const string& pattern, int index) {
-            TrieNode* node = root;
-            for (char c : pattern) {
-                int idx = c - 'a';
-                if (!node->children[idx]) {
-                    node->children[idx] = new TrieNode();
-                }
-                node = node->children[idx];
-            }
-            node->output.push_back(index);
-        }
-    
-        // Build the failure links
-        void build() {
-            queue<TrieNode*> q;
-            root->failureLink = root;
-    
-            for (int i = 0; i < 26; i++) {
-                if (root->children[i]) {
-                    root->children[i]->failureLink = root;
-                    q.push(root->children[i]);
-                } else {
-                    root->children[i] = root; // Point to root for missing links
-                }
-            }
-    
-            while (!q.empty()) {
-                TrieNode* current = q.front();
-                q.pop();
-    
-                for (int i = 0; i < 26; i++) {
-                    if (current->children[i]) {
-                        TrieNode* failure = current->failureLink;
-                        while (!failure->children[i]) {
-                            failure = failure->failureLink;
-                        }
-                        current->children[i]->failureLink = failure->children[i];
-                        current->children[i]->output.insert(
-                            current->children[i]->output.end(),
-                            failure->children[i]->output.begin(),
-                            failure->children[i]->output.end()
-                        );
-                        q.push(current->children[i]);
-                    }
-                }
-            }
-        }
-    
-        // Search for patterns in the text
-        void search(const string& text) {
-            TrieNode* node = root;
-    
-            for (int i = 0; i < text.size(); i++) {
-                int idx = text[i] - 'a';
-                while (!node->children[idx]) {
-                    node = node->failureLink;
-                }
-                node = node->children[idx];
-    
-                for (int patternIndex : node->output) {
-                    cout << "Pattern " << patterns[patternIndex] << " found at index " << i - patterns[patternIndex].size() + 1 << endl;
-                }
-            }
-        }
-    
-        // Add patterns and build the trie
-        void addPatterns(const vector<string>& inputPatterns) {
-            patterns = inputPatterns;
-            for (int i = 0; i < patterns.size(); i++) {
-                insert(patterns[i], i);
-            }
-            build();
-        }
-    };
 
 //Dynamic Programming:
 
@@ -629,86 +528,6 @@ long long modularInverseFermat(long long a) {
 
 //Main Function:
 
-/*
-int solve(string &s)
-{
-    vector<pair<char,int>>vp;
-    int n=s.size();
-   int i=0;
-   while(i<n)
-   {
-    int j=i;
-    while(j<n && s[j]==s[i])
-    {
-        j++;
-   }
-   vp.push_back({s[i],j-i});
-   i=j;
-}
-long long count=0;
-for(int i=0;i<vp.size();i++)
-{
-    if(vp[i].second>=2)
-    {
-        count+=((vp[i].second-1)*(vp[i].second))/2;
-    }
-    if(i>1)
-    {
-        if(vp[i-2].first==vp[i].first)
-        {
-            ++count;
-        }
-    }
-}
-return count;
-
-}
-*/
-
-
-vector<int> solve(vector<int>dp,vector<vector<int>>&inter)
-{
-    int n=dp.size();
-    int m=inter.size();
-   vector<pair<int,int>>vp;
-   for(int i=0;i<m;i++)
-   {
-    vp.push_back({inter[i][0],inter[i][1]});
-   }
-   sort(vp.begin(),vp.end());
-   vector<pair<int,int>>merged;
-   int x=vp[0].first;
-   int y=vp[0].second;
-    for(int i=1;i<m;i++)
-    {
-     if(vp[i].first<=y)
-     {
-          y=max(y,vp[i].second);
-     }
-     else
-     {
-          merged.push_back({x,y});
-          x=vp[i].first;
-          y=vp[i].second;
-     }
-    }
-    merged.push_back({x,y});
-    for(int i=0;i<merged.size();i++)
-    {
-        int x=merged[i].first;
-        int y=merged[i].second;
-        if(x==y)
-        {
-            continue;
-        }
-        --x;
-        --y;
-        
-       sort(dp.begin()+x,dp.begin()+y+1);
-    
-   }
-   return dp;
-}
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -718,24 +537,57 @@ int main() {
     cin >> t; 
     while (t--) 
     {
-      int n,m;
-      cin>>n>>m;
-      vector<int>dp(n,0);
-      vector<vector<int>>inter(m,vector<int>(2,0));
-      for(int i=0;i<n;i++)
-      {
-        cin>>dp[i];
-      }
-      for(int i=0;i<m;i++)
-      {
-        cin>>inter[i][0];
-        cin>>inter[i][1];
-      }
-      vector<int>ans=solve(dp,inter);
-      for(int i=0;i<n;i++)
-      {
-        cout<<ans[i]<<" ";
-      }
+       ll n;
+       cin>>n;
+       vector<ll>a(n);
+       for(int i=0;i<n;i++)
+       {
+        cin>>a[i];
+       }
+       vector<ll>mini(n,INT_MAX);
+       vector<ll>maxi(n,INT_MIN);
+       mini[n-1]=a[n-1];
+       maxi[0]=a[0];
+         for(int i=1;i<n;i++)
+         {
+          maxi[i]=max(maxi[i-1],a[i]);
+         }
+       for(int i=n-2;i>=0;i--)
+         {
+          mini[i]=min(mini[i+1],a[i]);
+         }
+         vector<ll>sum(n,0);
+         sum[n-1]=a[n-1];
+            for(int i=n-2;i>=0;i--)
+            {
+            sum[i]=sum[i+1]+a[i];
+            }
+         vector<ll>ans;
+         for(int i=n-1;i>0;i--)
+         {
+            ll x=sum[i]-a[i]+maxi[i-1];
+            //cout<<x<<endl;
+            if(x>sum[i])
+            {
+             ans.push_back(x);
+            }
+            else{
+                ans.push_back(sum[i]);
+            }
+
+         }
+         ans.push_back(sum[0]);
+        // reverse(ans.begin(),ans.end());
+         for(int i=0;i<n;i++)
+         {
+            cout<<ans[i]<<' ';
+         }
+         cout<<endl;
+
+
+       
+
+
     }
 
     return 0;
