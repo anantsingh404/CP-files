@@ -1973,22 +1973,6 @@ long long modularInverseFermat(long long a) {
     return modularExponentiation(a, mod - 2);
 }
 
-// Modular Exponentiation (helper function)
-// Computes (base^exponent) % mod efficiently using exponentiation by squaring.
-long long modularExponentiation(long long base, long long exponent) {
-    long long result = 1;
-    base = base % mod;
-
-    while (exponent > 0) {
-        if (exponent % 2 == 1) {
-            result = (result * base) % mod;
-        }
-        base = (base * base) % mod;
-        exponent /= 2;
-    }
-
-    return result;
-}
 
 //Main Function:
 

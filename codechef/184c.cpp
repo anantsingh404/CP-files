@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 1000000007
+#define mod 998244353
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -1858,7 +1858,7 @@ vector<int> sieveOfEratosthenes(int n) {
 
     return primes;
 }
-// Modular Exponentiation
+// modular Exponentiation
 // Usage: Computes (base^exponent) % mod efficiently using the method of exponentiation by squaring.
 // Example: Cryptography, modular arithmetic problems, etc.
 // Time Complexity: O(log(exponent)).
@@ -1905,7 +1905,7 @@ int lcm(int a, int b) {
 
 // Extended Euclidean Algorithm
 // Usage: Computes the GCD of two numbers and finds coefficients x and y such that ax + by = gcd(a, b).
-// Example: Modular inverses, solving linear Diophantine equations, etc.
+// Example: modular inverses, solving linear Diophantine equations, etc.
 // Time Complexity: O(log(min(a, b))).
 // Space Complexity: O(1).
 
@@ -1928,7 +1928,7 @@ int extendedGCD(int a, int b, int &x, int &y) {
 
 // Chinese Remainder Theorem (CRT)
 // Usage: Solves a system of simultaneous congruences using the Chinese Remainder Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(N), where N is the number of congruences.
 // Space Complexity: O(1).
 
@@ -1937,7 +1937,7 @@ int modularInverse(int a, int m) {
     int x, y;
     int g = extendedGCD(a, m, x, y);
     if (g != 1) {
-        throw invalid_argument("Modular inverse does not exist");
+        throw invalid_argument("modular inverse does not exist");
     }
     return (x % m + m) % m;
 }
@@ -1963,13 +1963,13 @@ int chineseRemainderTheorem(vector<int>& nums, vector<int>& rems) {
 }
 // Fermat's Little Theorem (for modular inverses)
 // Usage: Computes the modular inverse of a number modulo a prime using Fermat's Little Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(log(mod - 1)), where mod is the prime modulus.
 // Space Complexity: O(1).
 
 long long modularInverseFermat(long long a) {
     // Fermat's Little Theorem: a^(mod-1) ≡ 1 (mod mod)
-    // Modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
+    // modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
     return modularExponentiation(a, mod - 2);
 }
 
@@ -1984,8 +1984,59 @@ int main() {
     cin >> t; 
     while (t--) 
     {
+         int n;
+         cin>>n;
+         unordered_map<int,int>mp;
+         vector<int>dp(n,0);
+         int flag=1;
+         int res=1;
+         for(int i=0;i<n;i++)
+         {
+            cin>>dp[i];
+         }
         
+         for(int i=0;i<n;i++)
+         {
+            if(dp[i]>=0 && dp[i]<n)
+            {
+                mp[dp[i]]++;
+            }
+            else{
+                mp[0]=n+1;
+            }
+           
 
+         }
+         
+ 
+         int i=0;
+         while(i<n-1-i)
+         {
+            if(mp[i]+mp[n-1-i]>2)
+            {
+             flag=0;
+             break;
+            }
+            if(mp[i]+mp[n-1-i]>=1)
+            {
+                res=(res*2)%mod;
+            }
+            i++;
+         }
+         if(flag==0)
+         {
+            cout<<0<<endl;
+            continue;
+         }
+         if(n%2==1)
+         {
+            if(mp[(n-1)/2]>1)
+            {
+                res=0;
+            }
+         }
+         cout<<res<<endl;
+       
     }
 
     return 0;

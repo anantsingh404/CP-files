@@ -1973,6 +1973,7 @@ long long modularInverseFermat(long long a) {
     return modularExponentiation(a, mod - 2);
 }
 
+
 //Main Function:
 
 int main() {
@@ -1983,8 +1984,98 @@ int main() {
     int t;
     cin >> t; 
     while (t--) 
-    {
-        
+    {  
+         int n;
+        cin>>n;
+        vector<int>a(n,0),b(n,0);
+        int sa=0,sb=0,flag=1;
+        for(int i=0;i<n;i++)
+        {
+            cin>>a[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            cin>>b[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            sa+=a[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            sb+=b[i];
+        }
+        if(a[0]!=b[0])
+        {
+            flag=0;
+        }
+        if(a[n-1]!=b[n-1])
+        {
+            flag=0;
+        }
+        if(flag==1 && sb>0 && sa==0)
+        {
+            flag=0;
+        }
+        if(flag==1)
+        {
+            int i=1;
+            while(i<n-1)
+            {
+                if(b[i]==0 && a[i]==1)
+                {
+                    if(!(a[i-1]==0 && a[i+1]==0))
+                    {
+                        flag=0;
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+        if(flag==1)
+        {
+             int i=0;
+             
+             while(i<n)
+             {  
+                int temp=0;
+                if(b[i]==1)
+                {
+                    int k=i;
+                    while(i+1<n && b[i+1]==1)
+                    {
+                        i++;
+                    }
+                    int j=k;
+                    while(j<=i)
+                    {
+                        if(a[j]==1)
+                        {
+                            temp=1;
+                            break;
+                        }
+                        j++;
+                    }
+                    if(temp==0)
+                    {
+                        flag=0;
+                        break;
+                    }
+
+                }
+                i++;
+             }
+        }
+        if(flag==1)
+        {
+            cout<<"Yes"<<endl;
+        }
+        else{
+            cout<<"No"<<endl;
+        }
+ 
+    
 
     }
 

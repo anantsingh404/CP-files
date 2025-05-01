@@ -1973,6 +1973,7 @@ long long modularInverseFermat(long long a) {
     return modularExponentiation(a, mod - 2);
 }
 
+
 //Main Function:
 
 int main() {
@@ -1985,6 +1986,43 @@ int main() {
     while (t--) 
     {
         
+      int n;
+      cin>>n;
+      string s,t;
+      cin>>s>>t;
+      string ans="Yes";
+      if(s==t)
+      {
+        cout<<ans<<endl;
+        continue;
+      }
+      int count=0;
+      for(int i=0;i<n;i++)
+      {
+        if(s[i]!=t[i] && s[i]=='0')
+        {
+          ans="No";
+          ++count;
+          break;
+        }
+        else if(s[i]!=t[i])
+        {
+            ++count;
+        }
+       
+      }
+      if(ans=="No")
+      {
+        cout<<ans<<endl;
+        continue;
+      }
+      if(count%2==0)
+      {
+        cout<<ans<<endl;
+      }
+      else{
+        cout<<"No"<<endl;
+      }
 
     }
 

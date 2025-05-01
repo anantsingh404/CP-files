@@ -1973,6 +1973,8 @@ long long modularInverseFermat(long long a) {
     return modularExponentiation(a, mod - 2);
 }
 
+
+
 //Main Function:
 
 int main() {
@@ -1982,11 +1984,51 @@ int main() {
 
     int t;
     cin >> t; 
+    
     while (t--) 
     {
+         int n;
+         cin>>n;
+         ll count=0;
+         ll first=1;
+         ll size=1;
+         ll di=0;
+         ll flag=0;
+         vector<ll>ans;
+         vector<ll>dp(n,0);
         
+         for(int i=0;i<n;i++)
+         {
+            cin>>dp[i];
+         }
+        
+         for(int i=0;i<n;i++)
+         {
+            if(dp[i]==1)
+            {
+                count+=size;
+                di=di+size;
+                ++size;
+                ++flag;
+            }
+            else{
+                count=2*count+di;
+                di=4*di;
+                size=2*size;
+            }
+            ans.push_back(count);
+         }
+         for(int i=0;i<ans.size();i++)
+         {
+            cout<<ans[i]<<' ';
+         }
+         cout<<endl;
 
-    }
+        
+        }
+       
+    
+  
 
     return 0;
 }
