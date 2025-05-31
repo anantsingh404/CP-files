@@ -1040,7 +1040,8 @@ void kahnsAlgorithm(int V, vector<vector<int>> &adjList) {
 
         for (int v : adjList[u]) {
             inDegree[v]--;
-            if (inDegree[v] == 0) {
+            if (inDegree[v] == 0) 
+            {
                 q.push(v);
             }
         }
