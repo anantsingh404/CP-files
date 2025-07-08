@@ -533,16 +533,47 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
+       int n;
+       cin>>n;
+       vector<int>dp(n,0);
+       for(int i=0;i<n;i++)
+       {
+        cin>>dp[i];
+        
+       }
+       sort(dp.begin(),dp.end());
+       int temp=-1;
+       for(int i=1;i<=1024;i++)
+       {
+        vector<int>flag(n,0);
+        for(int j=0;j<n;j++)
+        {
+            flag[j]=dp[j]^i;
+        }
+        sort(flag.begin(),flag.end());
+        int cnt=0;
+        for(int j=0;j<n;j++)
+        {
+            if(flag[j]!=dp[j])
+            {
+                cnt=1;
+                break;
+            }
+        }
+        if(cnt==0)
+        {
+            temp=i;
+            break;
+        }
+       }
+       cout<<temp<<endl;
 
 
     }
+
     return 0;
 }

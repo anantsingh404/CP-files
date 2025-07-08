@@ -533,16 +533,35 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
+     int n,j,k;
+     cin>>n>>j>>k;
+     --j;
+     vector<int>dp(n,0);
+     int maxi=0;
+     for(int i=0;i<n;i++)
+     {
+        cin>>dp[i];
+        maxi=max(maxi,dp[i]);
+    }
+    
+    if(k==1 && dp[j]!=maxi)
+    {
+        cout<<"NO"<<endl;
+    }
+    else{
+        cout<<"YES"<<endl;
+    }
+    
 
+
+    
 
 
     }
+
     return 0;
 }

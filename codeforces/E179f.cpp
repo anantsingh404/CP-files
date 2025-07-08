@@ -537,8 +537,35 @@ int main() {
     cin >> t; 
     while (t--) 
     { 
-     
+       ll n,m;
+    cin >> n >> m;
+    ll ans;
+   ll first = 1,sec = 2;
+   for(ll i = 3;i<=n;++i){
+    ll curr = first + sec;
+    first = sec;
+    sec = curr;
+   }
+   while(m--){
+    ll w,l,h;
+    cin >> w >> l >> h;
+    if((w*l*h) >= (sec*sec*sec)){
+        ll maxel = max(w-sec,l-sec);
+        maxel = max(maxel,h-sec);
+        if((w-sec < 0 || l-sec < 0 || h-sec < 0)){
+            cout << 0;
+        }else if( maxel >= first){
+             cout << 1;
+        }else{
+            cout << 0;
+        }
+    }else{
+        cout << 0 ;
     }
+    
+    }
+    cout<<endl;
+}
 
     return 0;
 }

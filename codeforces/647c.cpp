@@ -533,16 +533,21 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
-
-
+        
+     ll n;
+     cin>>n;
+     ll sum=0;
+     while(n>0)
+     {
+        sum+=n;
+        n/=2;
+     }
+     cout<<sum<<endl;
     }
+
     return 0;
 }

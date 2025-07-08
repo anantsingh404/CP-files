@@ -532,17 +532,56 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
-    ll t;
+    int t;
     cin>>t;
-
     while(t--)
     {
-     //write your code here
-       
+      ll n,l,r,k;
+      cin>>n>>l>>r>>k;
+      if(n%2)
+      {
+        cout<<l<<endl;
+      }
+      else{
+        if(n==1)
+        {
+            cout<<l<<endl;
+        }
+        else if(n==2)
+        {
+            cout<<-1<<endl;
+        }
+        else{
+          ll x=l;
+          ll y=1;
+          int count=0;
+          while(x>=2)
+          {
+            x/=2;
+            y*=2;
+            ++count;
+          }
+          y*=2;
+          
+          if(y<=r)
+          {
+            if(k<n-1)
+            {
+                cout<<l<<endl;
+            }
+            else{
+                cout<<y<<endl;
+            }
+          }
+          else{
+            cout<<-1<<endl;
+          }
+        }
+      }
 
 
 
     }
+    
     return 0;
 }

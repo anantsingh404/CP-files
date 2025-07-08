@@ -533,16 +533,64 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
-
-
+        int n, k;
+    string s;
+    cin >> n >> k >> s;
+    
+    int total_ones = count(s.begin(), s.end(), '1');
+    if (total_ones == 0)
+    {
+        cout << "Alice\n";
+        continue;
     }
+    if (total_ones <= k) 
+    {
+        cout << "Alice\n";
+        continue;
+    }
+    if(n<2*k) 
+    {
+        
+        vector<int> pref(n + 1, 0);
+        for (int i = 0; i < n; ++i) 
+        {
+            pref[i+1] = pref[i] + (s[i] == '1');
+        }
+        
+        bool alice_wins = false;
+        for (int i = 0; i <= n - k; ++i)
+         {
+            int ones_in_window = pref[i + k] - pref[i];
+            int ones_outside = total_ones - ones_in_window;
+            if (ones_outside <= k) 
+            {
+                alice_wins = true;
+                break;
+            }
+        }
+        
+        if(alice_wins) 
+        {
+            cout << "Alice\n";
+        } 
+        else 
+        {
+            cout << "Bob\n";
+        }
+        continue;
+    
+    }
+    else
+    {
+        
+        cout << "Bob\n";
+        
+    }
+    }
+
     return 0;
 }

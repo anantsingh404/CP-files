@@ -533,16 +533,63 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
-
-
+        
+      int n;
+      cin>>n;
+      vector<int>dp(n,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>dp[i];
+      }
+      vector<int>ans(n,0);
+      ans[0]=1;
+      ans[n-1]=1;
+      vector<int>leftmin(n,INT_MAX);
+       vector<int>rightmin(n,INT_MAX);
+        vector<int>leftmax(n,0);
+         vector<int>rightmax(n,0);
+         leftmin[0]=dp[0];
+         leftmax[0]=dp[0];
+         rightmin[n-1]=dp[n-1];
+         rightmax[n-1]=dp[n-1];
+         for(int i=1;i<n;i++)
+         {
+            leftmin[i]=min(dp[i],leftmin[i-1]);
+            //cout<<leftmin[i]<<endl;
+            leftmax[i]=max(dp[i],leftmax[i-1]);
+         }
+          for(int i=n-2;i>=0;i--)
+         {
+            rightmin[i]=min(dp[i],rightmin[i+1]);
+            rightmax[i]=max(dp[i],rightmax[i+1]);
+         }
+         for(int i=1;i<n-1;i++)
+         {
+            if(rightmax[i]>dp[i])
+            {
+                if(leftmin[i]>=dp[i])
+                {
+                    ans[i]=1;
+                }
+            }
+            else if(rightmax[i]==dp[i])
+            {
+                if(leftmin[i>=dp[i]])
+                {
+                    ans[i]=1;
+                }
+            }
+         }
+         for(int i=0;i<n;i++)
+         {
+            cout<<ans[i];
+         }
+         cout<<endl;
     }
+
     return 0;
 }

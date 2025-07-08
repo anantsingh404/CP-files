@@ -540,9 +540,27 @@ int main() {
     {
      //write your code here
        
-
-
-
+        int n;
+        cin >> n;
+        long long px, py, qx, qy;
+        cin >> px >> py >> qx >> qy;
+        long long mx = INT_MIN;
+        long long sum = 0;
+        vector<long long> s(n);
+        for (int i = 0; i < n; i++)
+        {
+            cin >> s[i];
+            if(mx<s[i]) mx=s[i];
+            sum += s[i];
+        }
+        long long distance=(long long)((px-qx)*(px-qx))+(long long)((py-qy)*(py-qy));
+        long long mxd=sum;
+        long long mind=2*mx-sum;
+        mind=max(mind,0LL);
+        if((long long)(mxd*mxd)<distance) cout<<"No"<<endl;
+        else if((long long)(mind*mind)>distance)cout<<"No"<<endl;
+        else cout<<"Yes"<<endl;
+ 
     }
     return 0;
 }

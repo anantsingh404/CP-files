@@ -540,7 +540,54 @@ int main() {
     {
      //write your code here
        
-
+      ll a,b,x,y;
+      cin>>a>>b>>x>>y;
+      
+      if(a==b)
+      {
+        cout<<0<<endl;
+      }
+      else if(a>b+1)
+      {
+        cout<<-1<<endl;
+      }
+      else if(a==b+1)
+      {
+        if(a%2)
+        {
+            cout<<y<<endl;
+        }
+        else{
+            cout<<-1<<endl;
+        }
+      }
+      else
+      {
+         if(x<=y)
+         {
+            cout<<x*(b-a)<<endl;
+         }
+            else
+            {
+               if(a%2 && b%2==0)
+               {
+                cout<<x*((b-a)/2)+y*((b-a)/2)+x<<endl;
+               }
+               else if(a%2 && b%2)
+               {
+                cout<<x*((b-a)/2)+y*((b-a)/2)<<endl;
+               }
+                else if(a%2==0 && b%2==0)
+               {
+                cout<<x*((b-a)/2)+y*((b-a)/2)<<endl;
+               }
+                 else if(a%2==0 && b%2)
+               {
+                cout<<x*((b-a)/2)+y*((b-a)/2)+y<<endl;
+               }
+            }
+      }
+      
 
 
     }

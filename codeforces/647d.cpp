@@ -527,22 +527,58 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
-    ll t;
-    cin>>t;
+    int n, m;
+    cin >> n >> m;
 
-    while(t--)
-    {
-     //write your code here
-       
-
-
-
+    vector<vector<int>> adj(n + 1);
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
+
+    vector<int> topic(n + 1);
+    vector<pair<int, int>> blogs;
+    for (int i = 1; i <= n; i++) {
+        cin >> topic[i];
+        blogs.push_back({topic[i], i});
+    }
+
+    sort(blogs.begin(), blogs.end()); 
+
+    vector<int> result;
+    vector<int> blogTopic(n + 1, 0); 
+
+    for (auto [t, node] : blogs) {
+        set<int> neighborTopics;
+        for (auto neighbor : adj[node]) {
+            if (blogTopic[neighbor]) {
+                neighborTopics.insert(blogTopic[neighbor]);
+            }
+        }
+        int smallest = 1;
+        while (neighborTopics.count(smallest)) {
+            smallest++;
+        }
+
+        if (smallest != t) {
+            cout << -1 << endl;
+            return 0;
+        }
+
+        blogTopic[node] = t;
+        result.push_back(node);
+    }
+
+    for (auto x : result) {
+        cout << x << " ";
+    }
+    cout << endl;
+
     return 0;
 }

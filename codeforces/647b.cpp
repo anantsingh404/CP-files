@@ -533,16 +533,62 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
-
+       ll a,b;
+       cin>>a>>b; 
+       priority_queue<pair<ll,ll>,vector<pair<ll,ll>>,greater<>>q;
+         q.push({0,a});
+         ll ans=-1;
+         unordered_map<ll,ll>vis;
+         vis[a]=0;
+         while(!q.empty())
+         {
+             auto p=q.top();
+             q.pop();
+             if(p.second==b)
+             {
+                ans=p.first;
+                break;
+             }
+             ll y=p.first;
+             ll x=p.second;
+             if(x/2>=0 && x%2==0 && vis.find(x/2)==vis.end())
+             {
+                vis[x/2]=1;
+                q.push({y+1,x/2});
+             }
+             if(x/4>=0 && x%4==0 && vis.find(x/4)==vis.end())
+             {
+                vis[x/4]=1;
+                q.push({y+1,x/4});
+             }
+             if(x/8>=0 && x%8==0 && vis.find(x/8)==vis.end())
+             {
+                vis[x/8]=1;
+                q.push({y+1,x/8});
+             }
+             if(x*2<=1e18 && vis.find(x*2)==vis.end())
+             {
+                vis[x*2]=1;
+                q.push({y+1,x*2});
+             }
+             if(x*4<=1e18 && vis.find(x*4)==vis.end())
+             {
+                vis[x*4]=1;
+                q.push({y+1,x*4});
+             }
+             if(x*8<=1e18 && vis.find(x*8)==vis.end())
+             {
+                vis[x*8]=1;
+                q.push({y+1,x*8});
+             }
+         }
+        cout<<ans<<"\n";
 
     }
+
     return 0;
 }

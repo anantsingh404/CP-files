@@ -533,16 +533,53 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
+        int n;
+        cin >> n;
+        vector<int> a(n), cnt(n + 2, 0);
+        for (int i = 0; i < n; i++) 
+        {
+            cin >> a[i];
+            cnt[a[i]]++;
+        }
+        vector<int> res(n + 2, 0);
+        int total = 0;
+        for (int mex = 0; mex <= n; ++mex) {
+            
+           if(cnt[mex])
+           {
+            
+            res[cnt[mex]]++;
+             if(n-total+1>=0){
+            --res[n-total+1];
+             }
+           }
+           else
+           {
+            res[0]++;
+            if(n-total+1>=0){
+            --res[n-total+1];
+            }
+            break;
+           }
+           ++total;
+        }
+        for (int i = 1; i <= n; i++) 
+        {
+            res[i] += res[i - 1];
+        }
 
+        for (int i = 0; i <= n; i++) 
+        {
+            cout << res[i] << " ";
+        }
+        cout<<endl;
 
 
     }
+
     return 0;
 }

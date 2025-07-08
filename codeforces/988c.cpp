@@ -533,16 +533,39 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
+      int n;
+      cin>>n;
+      if(n<=4)
+      {
+        cout<<-1<<endl;
+        continue;
+      }
+      int i=1;
+      while(i<=n)
+      {
+        if(i!=5)
+        {
+            cout<<i<<' ';
+        }
+        i+=2;
+      }
+      cout<<5<<' '<<4<<' ';
+      i=2;
+      while(i<=n)
+      {if(i!=4){
+        cout<<i<<' ';
+      }
+        i+=2;
+      }
+      cout<<endl;
 
-
+      
 
     }
+
     return 0;
 }

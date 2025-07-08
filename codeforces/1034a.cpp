@@ -533,16 +533,21 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
-
-    while(t--)
+    int t;
+    cin >> t; 
+    while (t--) 
     {
-     //write your code here
-       
-
-
+       int n;
+       cin>>n;
+       if(n%4)
+       {
+        cout<<"Alice"<<endl;
+       } 
+       else{
+        cout<<"Bob"<<endl;
+       }
 
     }
+
     return 0;
 }
