@@ -9,7 +9,7 @@ int main() {
     ll t;
     ll n,m;
     cin>>n>>m;
-
+    vector<vector<int>>arr(n,vector<int>(m,0));
     int ans=0;
    for(int i=0;i<n;i++)
    { int count=0;
