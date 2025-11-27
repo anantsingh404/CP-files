@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 998244353
+#define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -539,38 +539,61 @@ int main() {
     while(t--)
     {
      //write your code here
-       
-    ll n;
-    cin >> n;
-    ll mx = 0;
-     vector<ll>a(n+1,0);
-     vector<ll> cnt (n+1,0);
-     vector<ll> dp (n+2,0);
-     ll ans = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-         cin >> a[i];
-    }
-    for (int i = 1; i <= n; ++i)
-    {
-      cnt[a[i]] ++;
-      mx = max (mx, cnt[a[i]]);
-    } 
-    dp[0] = 1;
-    for (int i = 1; i <= n; ++i) 
-    {
-        for (int j = n; j >= cnt[i]; --j) 
-        {
-            dp[j] += dp[j - cnt[i]] * cnt[i] % mod;
-            dp[j] %= mod;
+      int n;
+        cin >> n;
+
+        vector<int>a(n), b(n);
+        for(int i = 0; i < n; i++) cin >> a[i];
+        for(int i = 0; i < n; i++) cin >> b[i];
+
+        vector<int> dp1(32,0), dp2(32,0);
+
+        // Count bits
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < 32; j++){
+                if(a[i] & (1 << j)) dp1[j]++;
+                if(b[i] & (1 << j)) dp2[j]++;
+            }
         }
-    }
-    for (int j = mx; j <= n; ++j)
-    {
-         ans += dp[j];
-         ans %= mod;
-    }
-    cout<<ans<<endl;
-    }
+
+        bool same = true;
+        for(int i = 0; i < 32; i++){
+            if((dp1[i] % 2) != (dp2[i] % 2)){
+                same = false;
+                break;
+            }
+        }
+
+        if(same){
+            cout << "Tie\n";
+            continue;
+        }
+
+        
+        string ans = "";
+        bool decided = false;
+
+        
+        for(int bit = 31; bit >= 0 && !decided; bit--){
+            if( (dp1[bit] % 2) != (dp2[bit] % 2) ) {
+                
+                
+                for(int i = n - 1; i >= 0; i--){
+                    bool x = (a[i] >> bit) & 1;
+                    bool y = (b[i] >> bit) & 1;
+
+                    if(x != y){
+                        if(i % 2 == 0) ans = "Ajisai";
+                        else ans = "Mai";
+                        
+                        decided = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        cout << ans << "\n";
+}
     return 0;
 }

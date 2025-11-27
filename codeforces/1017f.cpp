@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 998244353
+#define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -527,50 +527,41 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
     ll t;
-    cin>>t;
+    cin >> t;
 
     while(t--)
     {
-     //write your code here
-       
-    ll n;
-    cin >> n;
-    ll mx = 0;
-     vector<ll>a(n+1,0);
-     vector<ll> cnt (n+1,0);
-     vector<ll> dp (n+2,0);
-     ll ans = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-         cin >> a[i];
-    }
-    for (int i = 1; i <= n; ++i)
-    {
-      cnt[a[i]] ++;
-      mx = max (mx, cnt[a[i]]);
-    } 
-    dp[0] = 1;
-    for (int i = 1; i <= n; ++i) 
-    {
-        for (int j = n; j >= cnt[i]; --j) 
+       int n, m, k;
+        cin >> n >> m >> k;
+
+        if(m%k==0)
         {
-            dp[j] += dp[j - cnt[i]] * cnt[i] % mod;
-            dp[j] %= mod;
+            for(int i=0;i<n;i++)
+            {
+                for(int j=0;j<m;j++)
+                {
+                    cout<<1+(j+i)%k<<" ";
+                }
+                cout<<endl;
+            }
+        }
+        else{
+            for(int i=0;i<n;i++)
+            {
+                for(int j=0;j<m;j++)
+                {
+                    cout<<1+(m*i+j)%k<<" ";
+                }
+                cout<<endl;
+            }
         }
     }
-    for (int j = mx; j <= n; ++j)
-    {
-         ans += dp[j];
-         ans %= mod;
-    }
-    cout<<ans<<endl;
-    }
+
     return 0;
 }

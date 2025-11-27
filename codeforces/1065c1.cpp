@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 998244353
+#define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -539,38 +539,68 @@ int main() {
     while(t--)
     {
      //write your code here
+      int n;
+      cin>>n;
+      vector<int>arr(n,0);
+      for(int i=0;i<n;i++)
+      {
+          cin>>arr[i];
+      }
+      set<int>st;
+      vector<pair<int,int>>vp;
+      for(int i=0;i<n;i++)
+      {
        
-    ll n;
-    cin >> n;
-    ll mx = 0;
-     vector<ll>a(n+1,0);
-     vector<ll> cnt (n+1,0);
-     vector<ll> dp (n+2,0);
-     ll ans = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-         cin >> a[i];
-    }
-    for (int i = 1; i <= n; ++i)
-    {
-      cnt[a[i]] ++;
-      mx = max (mx, cnt[a[i]]);
-    } 
-    dp[0] = 1;
-    for (int i = 1; i <= n; ++i) 
-    {
-        for (int j = n; j >= cnt[i]; --j) 
+        if(st.empty())
         {
-            dp[j] += dp[j - cnt[i]] * cnt[i] % mod;
-            dp[j] %= mod;
+            st.insert(arr[i]);
         }
+        else
+        {    auto x=st.lower_bound(arr[i]);
+            if(x==st.begin())
+            {
+                st.insert(arr[i]);
+            }
+           else 
+           {
+         x--;
+          while (true) 
+         {
+        auto prev = x;  
+        if (x == st.begin())
+         {     
+            vp.push_back({*prev,arr[i]});
+               break;
+        }
+        x--;
+        if (*prev < arr[i]) 
+        {   vp.push_back({*prev,arr[i]});
+            st.erase(prev);
+        } 
+        else 
+        {
+            break;
+        }
+       }
+}
+
+      }
     }
-    for (int j = mx; j <= n; ++j)
-    {
-         ans += dp[j];
-         ans %= mod;
-    }
-    cout<<ans<<endl;
+      if(st.size()==1)
+      {
+        cout<<"Yes"<<endl;
+        for(int i=0;i<vp.size();i++)
+        {
+            cout<<vp[i].first<<" "<<vp[i].second<<endl;
+        }
+      }
+      else
+      {
+        cout<<"No"<<endl;
+      }
+
+
+
     }
     return 0;
 }

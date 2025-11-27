@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 998244353
+#define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -539,38 +539,49 @@ int main() {
     while(t--)
     {
      //write your code here
-       
-    ll n;
-    cin >> n;
-    ll mx = 0;
-     vector<ll>a(n+1,0);
-     vector<ll> cnt (n+1,0);
-     vector<ll> dp (n+2,0);
-     ll ans = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-         cin >> a[i];
-    }
-    for (int i = 1; i <= n; ++i)
-    {
-      cnt[a[i]] ++;
-      mx = max (mx, cnt[a[i]]);
-    } 
-    dp[0] = 1;
-    for (int i = 1; i <= n; ++i) 
-    {
-        for (int j = n; j >= cnt[i]; --j) 
-        {
-            dp[j] += dp[j - cnt[i]] * cnt[i] % mod;
-            dp[j] %= mod;
+     string s1,s2;
+     cin>>s1>>s2;
+     vector<pair<char,int>>v1,v2;
+     int i=0;
+        while(i<s1.size()){
+            char c=s1[i];
+            int cnt=0;
+            while(i<s1.size() && s1[i]==c){
+                cnt++;
+                i++;
+            }
+            v1.push_back({c,cnt});
         }
-    }
-    for (int j = mx; j <= n; ++j)
-    {
-         ans += dp[j];
-         ans %= mod;
-    }
-    cout<<ans<<endl;
+        i=0;
+        while(i<s2.size()){
+            char c=s2[i];
+            int cnt=0;
+            while(i<s2.size() && s2[i]==c){
+                cnt++;
+                i++;
+            }
+            v2.push_back({c,cnt});
+        }
+        if(v1.size()!=v2.size())
+        {
+            cout<<"NO\n";
+            continue;
+        }
+        bool ans=true;
+        for(int i=0;i<min(v1.size(),v2.size());i++){
+            if(v1[i].first!=v2[i].first || v1[i].second>v2[i].second || (v1[i].second*2)<v2[i].second){
+                ans=false;
+                break;
+            }
+        }
+        if(ans){
+            cout<<"YES\n";
+        }
+        else{
+            cout<<"NO\n";
+        }
+
+
     }
     return 0;
 }

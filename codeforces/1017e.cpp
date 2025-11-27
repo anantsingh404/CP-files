@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 998244353
+#define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -539,38 +539,43 @@ int main() {
     while(t--)
     {
      //write your code here
-       
-    ll n;
-    cin >> n;
-    ll mx = 0;
-     vector<ll>a(n+1,0);
-     vector<ll> cnt (n+1,0);
-     vector<ll> dp (n+2,0);
-     ll ans = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-         cin >> a[i];
-    }
-    for (int i = 1; i <= n; ++i)
-    {
-      cnt[a[i]] ++;
-      mx = max (mx, cnt[a[i]]);
-    } 
-    dp[0] = 1;
-    for (int i = 1; i <= n; ++i) 
-    {
-        for (int j = n; j >= cnt[i]; --j) 
+      ll n;
+      cin>>n;
+      vector<ll> arr(n);
+      vector<ll>bit(32,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>arr[i];
+        for(int j=0;j<32;j++)
         {
-            dp[j] += dp[j - cnt[i]] * cnt[i] % mod;
-            dp[j] %= mod;
+            if(arr[i]&(1<<j))
+            {
+                bit[j]++;
+            }
         }
-    }
-    for (int j = mx; j <= n; ++j)
-    {
-         ans += dp[j];
-         ans %= mod;
-    }
-    cout<<ans<<endl;
+      }
+      ll ans=0;
+      for(int i=0;i<n;i++)
+      {
+        ll sum=0;
+        for(int j=0;j<32;j++)
+        {
+            if(arr[i]&(1<<j))
+            {
+                sum+= (1LL<<j)*(n-bit[j]);
+            }
+            else
+            {
+                sum+= (1LL<<j)*(bit[j]);
+            }
+        }
+        ans=max(ans,sum);
+      }
+      cout<<ans<<endl;
+
+
+
+
     }
     return 0;
 }
