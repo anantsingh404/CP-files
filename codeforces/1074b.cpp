@@ -542,9 +542,39 @@ int main() {
     while(t--)
     {
      //write your code here
-       
+        ll n, m, h;
+cin >> n >> m >> h;
 
+vector<ll> a(n), dp(n), d(n, 0);
+vector<ll> b(m), c(m);
 
+for (int i = 0; i < n; i++) cin >> dp[i];
+for (int i = 0; i < m; i++) {
+    cin >> b[i] >> c[i];
+    b[i]--; 
+}
+a = dp;
+ll step = 0;
+
+for (int i = 0; i < m; i++) {
+    if (d[b[i]] < step)
+        a[b[i]] = dp[b[i]] + c[i];
+    else
+        a[b[i]] += c[i];
+    d[b[i]] = i;
+
+    if (a[b[i]] > h) {
+        a[b[i]] = dp[b[i]];
+        step = i;
+    }
+}
+
+for (int i = 0; i < n; i++) {
+    if (d[i] < step)
+        a[i] = dp[i];
+    cout << a[i] << " ";
+}
+cout << endl;
 
     }
     return 0;

@@ -542,7 +542,91 @@ int main() {
     while(t--)
     {
      //write your code here
-       
+    int n, q;
+    cin >> n >> q;
+    n = (1 << n);
+    vector<int> a(n);
+    int i = 0;
+    while (i < n) {
+        cin >> a[i];
+        i++;
+    }
+    vector<pair<int, int>> queries;
+    i = 0;
+    while (i < q) {
+        int idx, val;
+        cin >> idx >> val;
+        queries.push_back({idx, val});
+        i++;
+    }
+
+    vector<int> px(n);
+    px[0] = a[0];
+
+    i = 1;
+    while (i < n) {
+        px[i] = px[i - 1] ^ a[i];
+        i++;
+    }
+
+    vector<int> result;
+
+    i = 0;
+    while (i < q) {
+        int p = queries[i].first;
+        int v = queries[i].second;
+
+        p = p - 1;
+
+        int cur = 1;
+        int left = 0;
+        int right = n - 1;
+
+        while (left < right) {
+            int mid = (left + right) / 2;
+
+            bool inLeft;
+            if (p <= mid) {
+                inLeft = true;
+            } else {
+                inLeft = false;
+            }
+
+            int xorLeft = px[mid] ^ px[left] ^ a[left];
+            int xorRight = px[right] ^ px[mid];
+
+            if (inLeft) {
+                xorLeft = xorLeft ^ a[p] ^ v;
+            } else {
+                xorRight = xorRight ^ a[p] ^ v;
+            }
+
+            if (xorLeft >= xorRight) {
+                if (inLeft) {
+                    cur = cur + (right - mid);
+                }
+            } else {
+                if (!inLeft) {
+                    cur = cur + (right - mid);
+                }
+            }
+
+            if (inLeft) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        result.push_back(cur);
+        i++;
+    }
+    i = 0;
+    while (i < (int)result.size()) 
+    {
+        cout << n - result[i] << "\n";
+        i++;
+    } 
 
 
 

@@ -542,7 +542,17 @@ int main() {
     while(t--)
     {
      //write your code here
+       int n;
+       cin>>n;
        
+       int maxi=0;
+       for(int i=0;i<n;i++)
+       {
+              int x;
+              cin>>x;
+              maxi=max(maxi,x); 
+       }
+       cout<<maxi*n<<endl;
 
 
 

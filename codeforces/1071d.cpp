@@ -536,16 +536,40 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
+ll t;
+cin>>t;
+while(t--)
+{
+//write your code here     
+int n;
+cin >> n;
+int lim = (1 << n) - 1;
+cout << lim << " ";
+map<int, int> mp;
+int u = lim;
+int q = 31 - __builtin_clz(u + 1);
+int i = q - 1;
+while (i >= 1) {
+    u -= (1 << i);
 
-    while(t--)
-    {
-     //write your code here
-       
-
-
-
+    int j = 1;
+    while (j < lim) {
+        if ((u & j) == u && mp[j] == 0) {
+            mp[j] = 1;
+            cout << j << " ";
+        }
+        j++;
     }
-    return 0;
+    i--;
+}
+i = 0;
+while (i < lim) {
+    if (mp[i] == 0) {
+        cout << i << " ";
+    }
+    i++;
+}
+cout<<endl;
+}
+return 0;
 }

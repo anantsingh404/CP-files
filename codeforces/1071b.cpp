@@ -542,7 +542,30 @@ int main() {
     while(t--)
     {
      //write your code here
-       
+      int n;
+      cin>>n;
+      vector<int>dp(n,0); 
+      for(int i=0;i<n;i++) cin>>dp[i];
+      ll sum=0;
+      for(int i=0;i<n-1;i++)
+      {
+        sum+=abs(dp[i]-dp[i+1]);
+      }
+      int maxidiff=0;
+      for(int i=1;i<n-1;i++)
+      {
+        ll temp=abs(dp[i]-dp[i-1]);
+        ll temp1=abs(dp[i+1]-dp[i]);
+        ll temp2=abs(dp[i+1]-dp[i-1]);
+        if(temp+temp1-temp2>maxidiff)
+        {
+          maxidiff=temp+temp1-temp2;
+        }
+
+      }
+      maxidiff=max(maxidiff,abs(dp[1]-dp[0]));
+      maxidiff=max(maxidiff,abs(dp[n-1]-dp[n-2]));
+      cout<<sum-maxidiff<<"\n";
 
 
 

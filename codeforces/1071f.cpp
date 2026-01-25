@@ -531,21 +531,155 @@ long long modularInverseFermat(long long a) {
 
 //Main Function:
 
-int main() {
+signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+    string t;
+    cin >> t;
 
-    ll t;
-    cin>>t;
+    int T;
+    cin >> T;
+    while (T--) {
 
-    while(t--)
-    {
-     //write your code here
-       
+        if (t == "first") 
+        {
 
+            int n, m;
+            cin >> n >> m;
 
+            vector<int> vis(n + 1, 0);
+            vector<int> num(n + 1, 0);
+            vector<vector<int>> g(n + 1);
 
+            int i = 1;
+            while (i <= m) {
+                int u, v;
+                cin >> u >> v;
+                g[u].push_back(v);
+                g[v].push_back(u);
+                i++;
+            }
+
+            queue<pair<int, int>> q;
+            q.push({1, 0});
+
+            while (!q.empty()) {
+                int u = q.front().first;
+                int k = q.front().second;
+                q.pop();
+
+                if (vis[u]) {
+                    continue;
+                }
+
+                vis[u] = 1;
+                num[u] = k;
+
+                int j = 0;
+                while (j < (int)g[u].size()) {
+                    int v = g[u][j];
+                    if (!vis[v]) {
+                        q.push({v, (k + 1) % 3});
+                    }
+                    j++;
+                }
+            }
+
+            i = 1;
+            while (i <= n) {
+                if (num[i] == 0) {
+                    cout << 'r';
+                } else if (num[i] == 1) {
+                    cout << 'g';
+                } else {
+                    cout << 'b';
+                }
+                i++;
+            }
+            cout << '\n';
+
+        }
+         else
+          {
+
+            int q;
+            cin >> q;
+
+            while (q--) {
+                int n;
+                cin >> n;
+
+                string s;
+                cin >> s;
+
+                int r = 0;
+                int g = 0;
+                int b = 0;
+
+                int i = 0;
+                while (i < n) 
+                {
+                    if (s[i] == 'r') 
+                    {
+                        r = 1;
+                    } 
+                    else if (s[i] == 'g') 
+                    {
+                        g = 1;
+                    } 
+                    else 
+                    {
+                        b = 1;
+                    }
+                    i++;
+                }
+                if (r && g) 
+                {
+                    i = 0;
+                    while (i < n) 
+                    {
+                        if (s[i] == 'g') 
+                        {
+                            cout << i + 1 << '\n';
+                            break;
+                        }
+                        i++;
+                    }
+                }
+                 else if (r && b) 
+                {
+                    i = 0;
+                    while (i < n) 
+                    {
+                        if (s[i] == 'r') 
+                        {
+                            cout << i + 1 << '\n';
+                            break;
+                        }
+                        i++;
+                    }
+                } 
+                else if (g && b)
+                 {
+                    i = 0;
+                    while (i < n)
+                     {
+                        if (s[i] == 'b') 
+                        {
+                            cout << i + 1 << '\n';
+                            break;
+                        }
+                        i++;
+                    }
+                } 
+                else 
+                {
+                    cout << 1 << '\n';
+                }
+            }
+        }
     }
+
     return 0;
 }

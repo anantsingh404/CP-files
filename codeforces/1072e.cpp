@@ -528,6 +528,46 @@ long long modularInverseFermat(long long a) {
     return modularExponentiation(a, mod - 2);
 }
 
+class DSU {
+public:
+    vector<int> p, sz;
+
+    DSU(int n) {
+        p.resize(n);
+        sz.assign(n, 1);
+        int i = 0;
+        while (i < n) {
+            p[i] = i;
+            i++;
+        }
+    }
+
+    int get(int x) {
+        while (p[x] != x) {
+            x = p[x];
+        }
+        return x;
+    }
+
+    void unite(int a, int b) {
+        a = get(a);
+        b = get(b);
+        if (a == b) {
+            return;
+        }
+        if (sz[a] < sz[b]) {
+            swap(a, b);
+        }
+        p[b] = a;
+        sz[a] += sz[b];
+    }
+
+    long long comp(int x) {
+        x = get(x);
+        long long s = sz[x];
+        return (s * (s - 1)) / 2;
+    }
+};
 
 //Main Function:
 
@@ -543,7 +583,52 @@ int main() {
     {
      //write your code here
        
+    int n;
+    cin >> n;
 
+    vector<int> p(n);
+    int i = 0;
+    while (i < n) {
+        cin >> p[i];
+        i++;
+    }
+
+    vector<vector<int>> g(n);
+    i = 1;
+    while (i < n) {
+        int d = abs(p[i] - p[i - 1]);
+        g[d].push_back(i);
+        i++;
+    }
+
+    vector<long long> ans(n, 0);
+    DSU dsu(n);
+
+    long long cur = 0;
+    i = n - 1;
+    while (i >= 1) {
+        int j = 0;
+        while (j < (int)g[i].size()) {
+            int id = g[i][j];
+            cur -= dsu.comp(id);
+            cur -= dsu.comp(id - 1);
+            dsu.unite(id, id - 1);
+            cur += dsu.comp(id);
+            j++;
+        }
+        ans[i] = cur;
+        i--;
+    }
+
+    i = 1;
+    while (i < n) {
+        cout << ans[i];
+        if (i + 1 < n) {
+            cout << " ";
+        }
+        i++;
+    }
+    cout << endl;
 
 
     }

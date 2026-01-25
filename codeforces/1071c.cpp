@@ -542,10 +542,17 @@ int main() {
     while(t--)
     {
      //write your code here
-       
-
-
-
+      int n;
+      cin>>n;
+      vector<int>dp(n,0);
+      for(int i=0;i<n;i++)
+      {
+        cin>>dp[i];
+      }
+      sort(dp.begin(),dp.end());
+      int ans=0;
+      ans=max(dp[0],dp[1]-dp[0]);
+      cout<<ans<<endl;
     }
     return 0;
 }

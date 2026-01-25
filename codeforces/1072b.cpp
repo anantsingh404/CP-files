@@ -541,11 +541,30 @@ int main() {
 
     while(t--)
     {
-     //write your code here
-       
-
-
-
+     //write your code here   
+   int s,k,m;
+   cin>>s>>k>>m;
+   int need=m/k;
+   int temp=m%k;
+   if(need==0)
+   {
+     cout<<max(s-m,0)<<endl;
+     
+   }
+    else if(k>=s)
+    {
+        cout<<max(s-temp,0)<<endl;
+    }
+    else
+    { if(need%2)
+      {
+        cout<<max(k-temp,0)<<endl;
+      }
+      else
+      {  
+        cout<<max(s-temp,0)<<endl;
+      }
+    }
     }
     return 0;
 }

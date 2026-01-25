@@ -542,10 +542,64 @@ int main() {
     while(t--)
     {
      //write your code here
-       
-
-
-
+    int n;
+    cin >> n;
+    vector<vector<int>> a(n);
+    vector<array<long long, 4>> b(n);
+    map<int, int> g;
+    int i = 0;
+    while (i < n) {
+        int l;
+        cin >> l;
+        map<int, int> m;
+        int j = 0;
+        while (j < l) {
+            int x;
+            cin >> x;
+            a[i].push_back(x);
+            m[x]++;
+            j++;
+        }
+        int x = 0;
+        while (m.find(x) != m.end()) x++;
+        long long s = 0, c = 0;
+        int k = 0;
+        while (k < x) {
+            if (m.find(k) != m.end() && m[k] == 1) {
+                s += k;
+                c++;
+            }
+            k++;
+        }
+        int y = x + 1;
+        while (m.find(y) != m.end()) y++;
+        b[i][0] = x;
+        b[i][1] = y;
+        b[i][2] = s;
+        b[i][3] = c;
+        for (auto it : m) {
+            g[it.first] += it.second;
+        }
+        i++;
+    }
+    long long tot = 0;
+    for (auto &v : a) tot += (long long)v.size();
+    long long ans = 0;
+    i = 0;
+    while (i < n) {
+        long long x = b[i][0];
+        long long y = b[i][1];
+        long long s = b[i][2];
+        long long c = b[i][3];
+        long long sz = (long long)a[i].size();
+        ans += (long long)(n - 1) * s;
+        ans += (long long)g[x] * y;
+        ans += x * (tot - sz - g[x]);
+        ans += x * (long long)(n - 1) * (sz - c);
+        ans += x * (long long)(n - 2) * (tot - sz);
+        i++;
+    }
+    cout<<ans<<endl;
     }
     return 0;
 }

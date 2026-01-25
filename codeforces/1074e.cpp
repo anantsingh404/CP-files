@@ -395,7 +395,7 @@ vector<int> sieveOfEratosthenes(int n) {
 
     return primes;
 }
-// Modular Exponentiation
+// modular Exponentiation
 // Usage: Computes (base^exponent) % mod efficiently using the method of exponentiation by squaring.
 // Example: Cryptography, modular arithmetic problems, etc.
 // Time Complexity: O(log(exponent)).
@@ -442,7 +442,7 @@ int lcm(int a, int b) {
 
 // Extended Euclidean Algorithm
 // Usage: Computes the GCD of two numbers and finds coefficients x and y such that ax + by = gcd(a, b).
-// Example: Modular inverses, solving linear Diophantine equations, etc.
+// Example: modular inverses, solving linear Diophantine equations, etc.
 // Time Complexity: O(log(min(a, b))).
 // Space Complexity: O(1).
 
@@ -465,7 +465,7 @@ int extendedGCD(int a, int b, int &x, int &y) {
 
 // Chinese Remainder Theorem (CRT)
 // Usage: Solves a system of simultaneous congruences using the Chinese Remainder Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(N), where N is the number of congruences.
 // Space Complexity: O(1).
 
@@ -474,7 +474,7 @@ int modularInverse(int a, int m) {
     int x, y;
     int g = extendedGCD(a, m, x, y);
     if (g != 1) {
-        throw invalid_argument("Modular inverse does not exist");
+        throw invalid_argument("modular inverse does not exist");
     }
     return (x % m + m) % m;
 }
@@ -500,12 +500,12 @@ int chineseRemainderTheorem(vector<int>& nums, vector<int>& rems) {
 }
 // Fermat's Little Theorem (for modular inverses)
 // Usage: Computes the modular inverse of a number modulo a prime using Fermat's Little Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(log(mod - 1)), where mod is the prime modulus.
 // Space Complexity: O(1).
 
 
-// Modular Exponentiation (helper function)
+// modular Exponentiation (helper function)
 // Computes (base^exponent) % mod efficiently using exponentiation by squaring.
 long long modularExponentiation(long long base, long long exponent) {
     long long result = 1;
@@ -524,7 +524,7 @@ long long modularExponentiation(long long base, long long exponent) {
 
 long long modularInverseFermat(long long a) {
     // Fermat's Little Theorem: a^(mod-1) ≡ 1 (mod mod)
-    // Modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
+    // modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
     return modularExponentiation(a, mod - 2);
 }
 
@@ -542,10 +542,84 @@ int main() {
     while(t--)
     {
      //write your code here
-       
+    ll n, m, k;
+    cin >> n >> m >> k;
+     vector<ll> L(k + 1);
+    vector<ll> R(k + 1);
+    vector<ll> cnt(k + 1);
+    vector<ll> a(n);
+    vector<ll> b(m);
+    string s;
+    ll i = 0;
+    while (i < n) {
+        cin >> a[i];
+        i++;
+    }
+    i = 0;
+    while (i < m) {
+        cin >> b[i];
+        i++;
+    }
+    cin >> s;
+    ll pos = 0;
+    i = 0;
+    while (i < k) {
+        if (s[i] == 'L') {
+            pos = pos - 1;
+        } else {
+            pos = pos + 1;
+        }
 
+        if (-pos > L[i]) {
+            L[i + 1] = -pos;
+        } else {
+            L[i + 1] = L[i];
+        }
 
+        if (pos > R[i]) {
+            R[i + 1] = pos;
+        } else {
+            R[i + 1] = R[i];
+        }
 
+        i++;
+    }
+    b.push_back(mod);
+    b.push_back(-mod);
+    sort(b.begin(), b.end());
+    i = 0;
+    while (i < n) 
+    {
+        ll idx = lower_bound(b.begin(), b.end(), a[i]) - b.begin();
+
+        ll left_need = a[i] - b[idx - 1];
+        ll right_need = b[idx] - a[i];
+
+        ll t1 = lower_bound(L.begin(), L.end(), left_need) - L.begin() - 1;
+        ll t2 = lower_bound(R.begin(), R.end(), right_need) - R.begin() - 1;
+
+        ll use;
+        if (t1 < t2) {
+            use = t1;
+        } else {
+            use = t2;
+        }
+
+        if (use >= 0) {
+            cnt[use]++;
+        }
+
+        i++;
+    }
+    ll alive=n;
+    i=0;
+    while (i < k) 
+    {
+        alive = alive - cnt[i];
+        cout << alive << " ";
+        i++;
+    }
+    cout<<endl;
     }
     return 0;
 }

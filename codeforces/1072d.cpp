@@ -529,8 +529,22 @@ long long modularInverseFermat(long long a) {
 }
 
 
-//Main Function:
-
+//Main Function:onst ll mxN=1e6+10;
+ll tt,n,m,k;
+ll ncr[32][32];
+int highestBit(int n)
+{
+    int i = 31;
+    while (i >= 0)
+    {
+        if ((n & (1 << i)) != 0)
+        {
+            return i;
+        }
+        i--;
+    }
+    return -1;
+}
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -538,14 +552,44 @@ int main() {
 
     ll t;
     cin>>t;
-
+     ncr[0][0]=1;
+    for(int i=1;i<32;i++){
+        for(int j=0;j<=i;j++){
+            ncr[i][j] = ncr[i-1][j];
+            if(j-1>=0)
+                ncr[i][j] += ncr[i-1][j-1];
+        }
+    }
     while(t--)
     {
      //write your code here
-       
+       int n, k;
+    cin >> n >> k;
 
+    int ans = 0;
+    int lst = highestBit(n);
 
+    int i = 0;
+    while (i < lst)
+    {
+        int ones = 0;
+        while (ones <= i)
+        {
+            int need = 1 + ones + i;
+            if (need > k)
+            {
+                ans += ncr[i][ones];
+            }
+            ones++;
+        }
+        i++;
+    }
 
+    if (lst + 1 > k)
+    {
+        ans++;
+    }
+    cout << ans << '\n';
     }
     return 0;
 }

@@ -542,7 +542,32 @@ int main() {
     while(t--)
     {
      //write your code here
-       
+     int n;
+     cin>>n;
+     vector<int>arr(n);
+     for(int i=0;i<n;i++)
+     {
+        cin>>arr[i];
+     }
+     sort(arr.begin(),arr.end());
+     set<int>s(arr.begin(),arr.end());
+     arr.resize(s.size());
+        n=arr.size();int i=0;
+        for(int itr:s)
+        {
+         arr[i++]=itr;
+        }
+     vector<int>dp(n,1);
+     int ans=1;
+     for(int i=1;i<n;i++)
+     {
+        if(arr[i]==arr[i-1]+1)
+        {   
+            dp[i]=dp[i-1]+1;ans=max(ans,dp[i]);
+        }
+     }
+        cout<<ans<<endl;
+
 
 
 

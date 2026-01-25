@@ -530,22 +530,87 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
+struct Node {
+    int v[3];
+};
+Node dfs(int u, int p, vector<vector<int>> &g) {
+    Node res;
+    res.v[0] = 0;
+    res.v[1] = 1;
+    res.v[2] = 0;
+
+    int cnt = 0;
+    int a1 = 0;
+    int a2 = 0;
+
+    int i = 0;
+    while (i < (int)g[u].size()) {
+        int v = g[u][i];
+        if (v != p) {
+            Node t = dfs(v, u, g);
+            cnt++;
+            a1 += t.v[2];
+            a2 += t.v[0];
+        }
+        i++;
+    }
+
+    if (cnt > 0) {
+        if (a1 > 3) {
+            a1 = 3;
+        }
+        if (a2 > 2) {
+            a2 = 2;
+        }
+
+        Node cur;
+        cur.v[0] = cur.v[1] = cur.v[2] = 0;
+
+        int x = 0;
+        while (x <= a1) {
+            int y = 0;
+            while (y <= a2) {
+                cur.v[(cnt + x + y * 2) % 3] = 1;
+                y++;
+            }
+            x++;
+        }
+        res = cur;
+    }
+
+    return res;
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
     ll t;
-    cin>>t;
+    cin >> t;
 
-    while(t--)
-    {
-     //write your code here
-       
+    while (t--) {
+        int n;
+        cin >> n;
 
+        vector<vector<int>> g(n + 1);
 
+        int i = 0;
+        while (i < n - 1) {
+            int u, v;
+            cin >> u >> v;
+            g[u].push_back(v);
+            g[v].push_back(u);
+            i++;
+        }
 
+        Node r = dfs(1, 0, g);
+
+        if (r.v[0]) {
+            cout << "YES\n";
+        } else {
+            cout << "NO\n";
+        }
     }
+
     return 0;
 }

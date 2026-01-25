@@ -543,9 +543,42 @@ int main() {
     {
      //write your code here
        
+     int n, x, y;  cin >> n >> x >> y;
+     string s; cin >> s;
+     vector<int> p(n + 1);
+     for(int i = 1; i <= n; i ++)  cin >> p[i];
+ 
+     int p1 = 0, p2 = 0;
+     int cnt = 0;
+     for(int i = 0; i < n; i ++){
+       if(s[i] == '0'){
+        cnt ++;
+        p1 += p[i + 1] / 2 + 1;
+      }
+     else
+     {
+      p2 += p[i + 1] / 2 + 1;
+     }
+  }
+  int ans = 1;
+  ll sum=accumulate(p.begin(), p.end(), 0ll);
+  if(sum>x+y)
+  {
+    ans=0;
+  }
+  if(x < p1)  ans = 0;
+  if(y < p2)  ans = 0;
+  if(cnt == 0 && y - x < n)
+  {
+    ans = 0;
+  }
+  if(cnt == n && x - y < n)
+  {
+    ans = 0;
+  }
+ 
+  cout << (ans ? "YES" : "NO") << endl;
 
-
-
-    }
+}
     return 0;
 }
