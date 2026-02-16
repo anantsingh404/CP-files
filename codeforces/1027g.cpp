@@ -530,15 +530,37 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
+const int MAXN = 200000 + 5;
+ll a[MAXN];
+ll b[MAXN];
+ll c[MAXN];
+vector<int> g[MAXN];
+void dfs(int u, int parent)
 {
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
+    if (parent == 0)
     {
-         return 1;
+        b[u] = a[u];
+        c[u] = a[u];
     }
-    return 0;
+    else
+    {
+        b[u] = max(a[u], a[u] - c[parent]);
+        c[u] = a[u] - b[parent];
+    }
+
+    int i = 0;
+    while (i < (int)g[u].size())
+    {
+        int v = g[u][i];
+        if (v != parent)
+        {
+            dfs(v, u);
+        }
+        i++;
+    }
 }
+
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -549,23 +571,36 @@ int main() {
 
     while(t--)
     {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int n;
+        cin >> n;
+
+        int i = 1;
+        while (i <= n)
         {
-            r=mid;
+            cin >> a[i];
+            g[i].clear();
+            i++;
         }
-        else
+
+        i = 1;
+        while (i < n)
         {
-             l=mid+1;
+            int u, v;
+            cin >> u >> v;
+            g[u].push_back(v);
+            g[v].push_back(u);
+            i++;
         }
-    }
-    cout<<r<<endl;
+
+        dfs(1, 0);
+
+        i = 1;
+        while (i <= n)
+        {
+            cout << b[i] << " ";
+            i++;
+        }
+        cout << "\n"; 
     }
     return 0;
 }

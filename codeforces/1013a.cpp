@@ -531,21 +531,34 @@ long long modularInverseFermat(long long a) {
 
 //Main Function:
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
     ll t;
     cin>>t;
-
     while(t--)
     {
-     //write your code here
-       
-
-
-
+    int n;
+    cin >> n;
+    vector<int>cnt(10, 0);
+    bool f = 0;
+    for (int i = 0; i < n; i++) 
+    {
+        int digit;
+        cin >> digit;
+        cnt[digit]+=1;
+        if (cnt[0] >= 3 && cnt[1] >= 1 && cnt[2] >= 2 && cnt[3] >= 1 && cnt[5] >= 1 && f==false) 
+        {
+                cout << i + 1 << endl;
+                f = 1;
+        }
+    }
+    if (f==false)
+    {
+    cout << 0 << endl;
+    }
     }
     return 0;
 }

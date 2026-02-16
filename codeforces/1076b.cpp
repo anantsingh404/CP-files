@@ -530,42 +530,69 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
+int main()
 {
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
-int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
+    long long t;
+    cin >> t;
 
-    while(t--)
+    while (t--)
     {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int n;
+        cin >> n;
+
+        vector<int> p(n + 1);
+
+        int i = 1;
+        while (i <= n)
         {
-            r=mid;
+            cin >> p[i];
+            i++;
         }
-        else
+
+        int cur = n;
+        bool done = false;
+
+        i = 1;
+        while (i <= n && !done)
         {
-             l=mid+1;
+            if (p[i] != cur)
+            {
+                int l = i;
+                int r = i;
+                int j = i + 1;
+
+                while (j <= n)
+                {
+                    if (p[j] == cur)
+                    {
+                        r = j;
+                        break;
+                    }
+                    j++;
+                }
+
+                reverse(p.begin() + l, p.begin() + r + 1);
+                done = true;
+            }
+            else
+            {
+                cur--;
+            }
+            i++;
         }
+
+        i = 1;
+        while (i <= n)
+        {
+            cout << p[i] << ' ';
+            i++;
+        }
+        cout << '\n';
     }
-    cout<<r<<endl;
-    }
+
     return 0;
 }

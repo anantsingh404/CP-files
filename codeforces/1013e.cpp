@@ -543,9 +543,31 @@ int main() {
     {
      //write your code here
        
-
-
-
-    }
+   int n;
+   cin>>n;
+   vector<bool>isPrime(n+1, 1);
+   isPrime[0]=0;
+   isPrime[1]=0;
+   for(int i = 2; i*i<=n;i++)
+   {
+       if(isPrime[i]==1)
+       {
+           for(int j=2*i;j<=n;j+=i)
+           {
+               isPrime[j] = 0;
+           }
+       }
+   }
+   long long ans = 0;
+   for(int i = 1; i <=n; i++)
+   {
+       if(isPrime[i])
+       {
+           ans+=max(((n/i)-1),0);
+           ans+=1;
+       }
+   }
+   cout<<ans<<endl;
+}
     return 0;
 }

@@ -14,10 +14,6 @@ using namespace std;
 #define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
-// Constants
-const int inf = 1e9;
-const ll linf = 1e18;
-
 // Debugging
 #define debug(x) cerr << #x << " = " << x << endl;
 #define debug_vec(v) cerr << #v << " = "; for (auto x : v) cerr << x << " "; cerr << endl;
@@ -25,6 +21,7 @@ const ll linf = 1e18;
 // Directions for grid traversal
 const int dx[4] = {-1, 0, 1, 0};
 const int dy[4] = {0, 1, 0, -1};
+const ll INF=2e18;
 
 // Utility Functions
 template <typename T>
@@ -32,6 +29,11 @@ void printVec(const vector<T>& v) {
     for (const auto& x : v) cout << x << " ";
     cout << endl;
 }
+//solution global variables
+const int N = 200007;
+int n, ax, ay, bx, by;
+long long dp[N][2];
+vector<tuple<int, int, int>> a;
 
 template <typename T>
 void printMatrix(const vector<vector<T>>& mat) {
@@ -530,42 +532,101 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
+
+long long solve(int i, int t)
 {
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
+    if (i == (int)a.size() - 1)
     {
-         return 1;
+        return 0;
     }
-    return 0;
+
+    long long &ret = dp[i][t];
+    if (ret != INF)
+    {
+        return ret;
+    }
+
+    int xx, lo, hi;
+    int x, l, h;
+
+    tie(xx, lo, hi) = a[i];
+    tie(x, l, h) = a[i + 1];
+
+    long long dx = llabs(x - xx) + llabs(h - l);
+
+    if (t == 0)
+    {
+        ret = min(ret, dx + llabs(lo - l) + solve(i + 1, 1));
+        ret = min(ret, dx + llabs(lo - h) + solve(i + 1, 0));
+    }
+    else
+    {
+        ret = min(ret, dx + llabs(hi - l) + solve(i + 1, 1));
+        ret = min(ret, dx + llabs(hi - h) + solve(i + 1, 0));
+    }
+
+    return ret;
 }
-int main() {
+
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+       long long t;
+    cin >> t;
 
-    ll t;
-    cin>>t;
+    while (t--)
+    {
+        cin >> n >> ax >> ay >> bx >> by;
+        a.clear();
 
-    while(t--)
-    {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int i = 0;
+        while (i <= n + 2)
         {
-            r=mid;
+            dp[i][0] = INF;
+            dp[i][1] = INF;
+            i++;
         }
-        else
+
+        vector<int> vx(n);
+        map<int, int> low, high;
+
+        i = 0;
+        while (i < n)
         {
-             l=mid+1;
+            cin >> vx[i];
+            low[vx[i]] = 2000000000;
+            high[vx[i]] = -1;
+            i++;
         }
+
+        i = 0;
+        while (i < n)
+        {
+            int y;
+            cin >> y;
+            low[vx[i]] = min(low[vx[i]], y);
+            high[vx[i]] = max(high[vx[i]], y);
+            i++;
+        }
+
+        i = 0;
+        while (i < n)
+        {
+            a.push_back({vx[i], low[vx[i]], high[vx[i]]});
+            i++;
+        }
+
+        a.push_back({ax, ay, ay});
+        a.push_back({bx, by, by});
+
+        sort(a.begin(), a.end());
+        a.erase(unique(a.begin(), a.end()), a.end());
+
+        long long ans = solve(0, 0);
+        cout << ans << '\n';
     }
-    cout<<r<<endl;
-    }
+
     return 0;
 }

@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -55,7 +56,7 @@ void printMatrix(const vector<vector<T>>& mat) {
 vector<int> computeLPS(string pattern) {
     int m = pattern.length();
     vector<int> lps(m, 0); // LPS array
-    int len = 0; // Length of the previous longest prefix suffix
+    int len = 0; // Length of the previous longest tempix suffix
     int i = 1;
 
     while (i < m) {
@@ -66,7 +67,7 @@ vector<int> computeLPS(string pattern) {
             i++;
         } else {
             if (len != 0) {
-                len = lps[len - 1]; // Fall back to the previous prefix
+                len = lps[len - 1]; // Fall back to the previous tempix
             } else {
                 lps[i] = 0;
                 i++;
@@ -530,15 +531,7 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -550,22 +543,26 @@ int main() {
     while(t--)
     {
      //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
+    int n;
+    cin >> n;
+    vector<int>a(n,0);
+    vector<int>b(n,0);
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n; i++) cin >> b[i];
+    sort(a.begin(),a.end());
+    long long ans = 0;
+    int l = 0;
+    int temp = 0;
+    for (int i = n-1; i >= 0; i--) 
     {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        if (temp + b[l] == n-i) 
         {
-            r=mid;
+            temp += b[l];
+            l++;
         }
-        else
-        {
-             l=mid+1;
-        }
+        ans = max(ans, (long long) a[i] * l);
     }
-    cout<<r<<endl;
+    cout<<ans<<endl;
     }
     return 0;
 }

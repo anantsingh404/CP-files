@@ -14,10 +14,6 @@ using namespace std;
 #define mod 1000000007
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
-// Constants
-const int inf = 1e9;
-const ll linf = 1e18;
-
 // Debugging
 #define debug(x) cerr << #x << " = " << x << endl;
 #define debug_vec(v) cerr << #v << " = "; for (auto x : v) cerr << x << " "; cerr << endl;
@@ -530,14 +526,21 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
+int rd(vector<int> &arr)
 {
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
+    if (arr.empty())
+        return 0;
+ 
+    int k = 0;
+    for (int i = 1; i < arr.size(); i++)
     {
-         return 1;
+        if (arr[i] != arr[k])
+        {
+            k++;
+            arr[k] = arr[i];
+        }
     }
-    return 0;
+    return k + 1;
 }
 int main() {
     ios_base::sync_with_stdio(false);
@@ -550,22 +553,104 @@ int main() {
     while(t--)
     {
      //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+       
+       long long n;
+        cin >> n;
+
+        vector<int> arr(n);
+
+        int i = 0;
+        while (i < n)
         {
-            r=mid;
+            cin >> arr[i];
+            i++;
+        }
+
+        sort(arr.begin(), arr.end());
+
+        int k = rd(arr);
+        arr.resize(k);
+
+        bool has1 = false;
+        if (!arr.empty())
+        {
+            if (arr[0] == 1)
+            {
+                has1 = true;
+            }
+        }
+
+        arr.erase(remove(arr.begin(), arr.end(), 1), arr.end());
+
+        vector<int> dp(n + 1, INT_MAX);
+
+        if (!arr.empty())
+        {
+            dp[1] = 0;
+
+            int idx = 0;
+            while (idx < (int)arr.size())
+            {
+                int a = arr[idx];
+                int j = 1;
+
+                while (j * a <= n)
+                {
+                    if (dp[j] != INT_MAX)
+                    {
+                        dp[j * a] = min(dp[j * a], dp[j] + 1);
+                    }
+                    j++;
+                }
+                idx++;
+            }
+
+            i = 1;
+            while (i <= n)
+            {
+                if (dp[i] == INT_MAX)
+                {
+                    dp[i] = -1;
+                }
+                i++;
+            }
+
+            if (has1)
+            {
+                dp[1] = 1;
+            }
+            else
+            {
+                dp[1] = -1;
+            }
         }
         else
         {
-             l=mid+1;
+            if (has1)
+            {
+                dp[1] = 1;
+            }
+            else
+            {
+                dp[1] = -1;
+            }
+
+            i = 2;
+            while (i <= n)
+            {
+                dp[i] = -1;
+                i++;
+            }
         }
-    }
-    cout<<r<<endl;
+
+        i = 1;
+        while (i <= n)
+        {
+            cout << dp[i] << " ";
+            i++;
+        }
+        cout<<endl;
+
     }
     return 0;
 }

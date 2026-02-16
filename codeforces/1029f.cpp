@@ -17,6 +17,8 @@ using namespace std;
 // Constants
 const int inf = 1e9;
 const ll linf = 1e18;
+const int N = 2e5 + 5;
+
 
 // Debugging
 #define debug(x) cerr << #x << " = " << x << endl;
@@ -530,15 +532,7 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -550,22 +544,65 @@ int main() {
     while(t--)
     {
      //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
+    int n;
+    int ans;
+    bool ok;
+    vector<int> a;
+    vector<int> b;
+    map<int, bool> d;
+    cin >> n;
+    ans = 0;
+    ok = false;
+    a.assign(n + 2, 0);
+    b.assign(n + 2, 0);
+    d.clear();
+    int i = 1;
+    while (i <= n)
     {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
-        {
-            r=mid;
-        }
-        else
-        {
-             l=mid+1;
-        }
+        cin >> a[i];
+        i++;
     }
-    cout<<r<<endl;
+    i = 1;
+    while (i <= n)
+    {
+        cin >> b[i];
+        i++;
+    }
+    i = n;
+    while (i >= 1)
+    {
+        bool bad = false;
+
+        if (a[i] == b[i])
+        {
+            bad = true;
+        }
+        if (a[i] == a[i + 1])
+        {
+            bad = true;
+        }
+        if (b[i] == b[i + 1])
+        {
+            bad = true;
+        }
+        if (d.find(a[i]) != d.end())
+        {
+            bad = true;
+        }
+        if (d.find(b[i]) != d.end())
+        {
+            bad = true;
+        }
+        if (bad)
+        {
+            ans = i;
+            break;
+        }
+        d[a[i + 1]] = true;
+        d[b[i + 1]] = true;
+        i--;
+    }
+    cout<<ans<<endl;
     }
     return 0;
 }

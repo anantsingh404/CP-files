@@ -12,6 +12,7 @@ using namespace std;
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
 #define mod 1000000007
+#define MAXN 200000
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -395,7 +396,7 @@ vector<int> sieveOfEratosthenes(int n) {
 
     return primes;
 }
-// Modular Exponentiation
+// modular Exponentiation
 // Usage: Computes (base^exponent) % mod efficiently using the method of exponentiation by squaring.
 // Example: Cryptography, modular arithmetic problems, etc.
 // Time Complexity: O(log(exponent)).
@@ -442,7 +443,7 @@ int lcm(int a, int b) {
 
 // Extended Euclidean Algorithm
 // Usage: Computes the GCD of two numbers and finds coefficients x and y such that ax + by = gcd(a, b).
-// Example: Modular inverses, solving linear Diophantine equations, etc.
+// Example: modular inverses, solving linear Diophantine equations, etc.
 // Time Complexity: O(log(min(a, b))).
 // Space Complexity: O(1).
 
@@ -465,7 +466,7 @@ int extendedGCD(int a, int b, int &x, int &y) {
 
 // Chinese Remainder Theorem (CRT)
 // Usage: Solves a system of simultaneous congruences using the Chinese Remainder Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(N), where N is the number of congruences.
 // Space Complexity: O(1).
 
@@ -474,7 +475,7 @@ int modularInverse(int a, int m) {
     int x, y;
     int g = extendedGCD(a, m, x, y);
     if (g != 1) {
-        throw invalid_argument("Modular inverse does not exist");
+        throw invalid_argument("modular inverse does not exist");
     }
     return (x % m + m) % m;
 }
@@ -500,12 +501,12 @@ int chineseRemainderTheorem(vector<int>& nums, vector<int>& rems) {
 }
 // Fermat's Little Theorem (for modular inverses)
 // Usage: Computes the modular inverse of a number modulo a prime using Fermat's Little Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(log(mod - 1)), where mod is the prime modulus.
 // Space Complexity: O(1).
 
 
-// Modular Exponentiation (helper function)
+// modular Exponentiation (helper function)
 // Computes (base^exponent) % mod efficiently using exponentiation by squaring.
 long long modularExponentiation(long long base, long long exponent) {
     long long result = 1;
@@ -524,48 +525,146 @@ long long modularExponentiation(long long base, long long exponent) {
 
 long long modularInverseFermat(long long a) {
     // Fermat's Little Theorem: a^(mod-1) ≡ 1 (mod mod)
-    // Modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
+    // modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
     return modularExponentiation(a, mod - 2);
 }
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
+    vector<int> pow2;
+    pow2.assign(MAXN + 5, 0);
+    pow2[0] = 1;
+    int i = 1;
+      while (i <= MAXN)
+    {
+        pow2[i] = (pow2[i - 1] * 2LL) % mod;
+        i++;
+    }
     ll t;
     cin>>t;
-
+    
     while(t--)
     {
      //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
+    int n;
+    int leaves;
+    int X;
+    vector<vector<int>> adj;
+    vector<vector<int>> children;
+    vector<int> parent;
+    vector<int> depth;
+    vector<int> order;
+    vector<int> sz;
+    cin >> n;
+    adj.assign(n + 1, vector<int>());
+    children.assign(n + 1, vector<int>());
+    parent.assign(n + 1, 0);
+    depth.assign(n + 1, 0);
+    sz.assign(n + 1, 0);
+    order.clear();
+    i = 0;
+    while (i < n - 1)
     {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+        i++;
+    }
+    stack<int> st;
+    st.push(1);
+    parent[1] = 0;
+    depth[1] = 1;
+    while (!st.empty())
+    {
+        int u = st.top();
+        st.pop();
+
+        order.push_back(u);
+
+        i = 0;
+        while (i < (int)adj[u].size())
         {
-            r=mid;
-        }
-        else
-        {
-             l=mid+1;
+            int v = adj[u][i];
+            if (v != parent[u])
+            {
+                parent[v] = u;
+                depth[v] = depth[u] + 1;
+                children[u].push_back(v);
+                st.push(v);
+            }
+            i++;
         }
     }
-    cout<<r<<endl;
+    i = (int)order.size() - 1;
+    while (i >= 0)
+    {
+        int u = order[i];
+        sz[u] = 1;
+
+        int j = 0;
+        while (j < (int)children[u].size())
+        {
+            int v = children[u][j];
+            sz[u] += sz[v];
+            j++;
+        }
+
+        i--;
+    }
+    leaves = 0;
+    i = 1;
+    while (i <= n)
+    {
+        if (children[i].empty())
+        {
+            leaves++;
+        }
+        i++;
+    }
+    if (leaves > 2)
+    {
+        cout << 0 << '\n';
+        continue;
+    }
+    if (leaves == 1)
+    {
+        cout << pow2[n] << '\n';
+        continue;
+    }
+    X = -1;
+    i = 1;
+    while (i <= n)
+    {
+        if ((int)children[i].size() == 2)
+        {
+            X = i;
+            break;
+        }
+        i++;
+    }
+    int c1 = children[X][0];
+    int c2 = children[X][1];
+    int l = sz[c1];
+    int r = sz[c2];
+    int d = depth[X];
+    ll f;
+    if (l == r)
+    {
+        f = 2;
+    }
+    else
+    {
+        int diff = abs(l - r);
+        f = (3LL * pow2[diff - 1]) % mod;
+    }
+    ll ans = (pow2[d] * f) % mod;
+    cout << ans << '\n';
     }
     return 0;
 }

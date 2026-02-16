@@ -530,42 +530,84 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
+
+int main()
 {
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
-int main() {
-    ios_base::sync_with_stdio(false);
+    ios::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
-    ll t;
-    cin>>t;
+    int t;
+    cin >> t;
 
-    while(t--)
+    while (t--)
     {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int a, b, c;
+        cin >> a >> b >> c;
+
+        string d;
+        cin >> d;
+
+        int i = 0;
+        bool f = true;
+
+        while (i <= a)
         {
-            r=mid;
+            if (i + b >= a + 1)
+            {
+                break;
+            }
+
+            int x = -1;
+
+            for (int j = b; j >= 1; j--)
+            {
+                int y = i + j;
+                if (y <= a && d[y - 1] == 'L')
+                {
+                    x = y;
+                    break;
+                }
+            }
+
+            if (x != -1)
+            {
+                i = x;
+                continue;
+            }
+
+            i += b;
+
+            while (i <= a)
+            {
+                if (c <= 0 || d[i - 1] == 'C')
+                {
+                    f = false;
+                    break;
+                }
+
+                c--;
+                i++;
+
+                if (i > a || d[i - 1] == 'L')
+                {
+                    break;
+                }
+            }
+
+            if (!f)
+            {
+                break;
+            }
+        }
+
+        if (f)
+        {
+            cout << "YES\n";
         }
         else
         {
-             l=mid+1;
+            cout << "NO\n";
         }
-    }
-    cout<<r<<endl;
     }
     return 0;
 }

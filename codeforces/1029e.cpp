@@ -530,15 +530,7 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -549,23 +541,97 @@ int main() {
 
     while(t--)
     {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
+    int n;
+    cin >> n;
+    vector<long long> x, y;
+    x.resize(n);
+    y.resize(n);
+    int i = 0;
+    while (i < n)
     {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        cin >> x[i] >> y[i];
+        i++;
+    }
+    if (n <= 2)
+    {
+        cout << n << "\n";
+        return 0;
+    }
+    vector<long long> sx = x;
+    vector<long long> sy = y;
+    sort(sx.begin(), sx.end());
+    sort(sy.begin(), sy.end());
+    long long minx1 = sx[0];
+    long long minx2 = sx[1];
+    long long maxx1 = sx[n - 1];
+    long long maxx2 = sx[n - 2];
+    long long miny1 = sy[0];
+    long long miny2 = sy[1];
+    long long maxy1 = sy[n - 1];
+    long long maxy2 = sy[n - 2];
+    long long ans = LLONG_MAX;
+    i = 0;
+    while (i < n)
+    {
+        long long newMinX, newMaxX;
+        long long newMinY, newMaxY;
+
+        if (x[i] == minx1)
         {
-            r=mid;
+            newMinX = minx2;
         }
         else
         {
-             l=mid+1;
+            newMinX = minx1;
         }
+
+        if (x[i] == maxx1)
+        {
+            newMaxX = maxx2;
+        }
+        else
+        {
+            newMaxX = maxx1;
+        }
+
+        if (y[i] == miny1)
+        {
+            newMinY = miny2;
+        }
+        else
+        {
+            newMinY = miny1;
+        }
+
+        if (y[i] == maxy1)
+        {
+            newMaxY = maxy2;
+        }
+        else
+        {
+            newMaxY = maxy1;
+        }
+
+        long long width = newMaxX - newMinX + 1;
+        long long height = newMaxY - newMinY + 1;
+
+        long long area = width * height;
+
+        if (area == n - 1)
+        {
+            long long a1 = width * (height + 1);
+            long long a2 = (width + 1) * height;
+            area = min(a1, a2);
+        }
+
+        if (area < ans)
+        {
+            ans = area;
+        }
+
+        i++;
     }
-    cout<<r<<endl;
+    cout << ans << "\n";
     }
     return 0;
 }

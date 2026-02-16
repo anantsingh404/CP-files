@@ -12,6 +12,8 @@ using namespace std;
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
 #define mod 1000000007
+static const int MAXN = 200005;
+
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -395,7 +397,7 @@ vector<int> sieveOfEratosthenes(int n) {
 
     return primes;
 }
-// Modular Exponentiation
+// modular Exponentiation
 // Usage: Computes (base^exponent) % mod efficiently using the method of exponentiation by squaring.
 // Example: Cryptography, modular arithmetic problems, etc.
 // Time Complexity: O(log(exponent)).
@@ -442,7 +444,7 @@ int lcm(int a, int b) {
 
 // Extended Euclidean Algorithm
 // Usage: Computes the GCD of two numbers and finds coefficients x and y such that ax + by = gcd(a, b).
-// Example: Modular inverses, solving linear Diophantine equations, etc.
+// Example: modular inverses, solving linear Diophantine equations, etc.
 // Time Complexity: O(log(min(a, b))).
 // Space Complexity: O(1).
 
@@ -465,7 +467,7 @@ int extendedGCD(int a, int b, int &x, int &y) {
 
 // Chinese Remainder Theorem (CRT)
 // Usage: Solves a system of simultaneous congruences using the Chinese Remainder Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(N), where N is the number of congruences.
 // Space Complexity: O(1).
 
@@ -474,7 +476,7 @@ int modularInverse(int a, int m) {
     int x, y;
     int g = extendedGCD(a, m, x, y);
     if (g != 1) {
-        throw invalid_argument("Modular inverse does not exist");
+        throw invalid_argument("modular inverse does not exist");
     }
     return (x % m + m) % m;
 }
@@ -500,12 +502,12 @@ int chineseRemainderTheorem(vector<int>& nums, vector<int>& rems) {
 }
 // Fermat's Little Theorem (for modular inverses)
 // Usage: Computes the modular inverse of a number modulo a prime using Fermat's Little Theorem.
-// Example: Modular arithmetic problems, cryptography, etc.
+// Example: modular arithmetic problems, cryptography, etc.
 // Time Complexity: O(log(mod - 1)), where mod is the prime modulus.
 // Space Complexity: O(1).
 
 
-// Modular Exponentiation (helper function)
+// modular Exponentiation (helper function)
 // Computes (base^exponent) % mod efficiently using exponentiation by squaring.
 long long modularExponentiation(long long base, long long exponent) {
     long long result = 1;
@@ -524,48 +526,85 @@ long long modularExponentiation(long long base, long long exponent) {
 
 long long modularInverseFermat(long long a) {
     // Fermat's Little Theorem: a^(mod-1) ≡ 1 (mod mod)
-    // Modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
+    // modular inverse: a^(mod-2) ≡ a^(-1) (mod mod)
     return modularExponentiation(a, mod - 2);
 }
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
+long long fact[MAXN];
+long long invfact[MAXN];
+
+long long modpow(long long a, long long e) {
+    long long res = 1;
+    while (e > 0) {
+        if (e & 1) {
+            res = res * a % mod;
+        }
+        a = a * a % mod;
+        e >>= 1;
     }
-    return 0;
+    return res;
+}
+
+long long C(int n, int r) {
+    if (r < 0 || r > n) {
+        return 0;
+    }
+    long long res = fact[n];
+    res = res * invfact[r] % mod;
+    res = res * invfact[n - r] % mod;
+    return res;
 }
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+     fact[0] = 1;
+    int i = 1;
+    while (i < MAXN) {
+        fact[i] = fact[i - 1] * i % mod;
+        i++;
+    }
 
+    invfact[MAXN - 1] = modpow(fact[MAXN - 1], mod - 2);
+    i = MAXN - 2;
+    while (i >= 0) {
+        invfact[i] = invfact[i + 1] * (i + 1) % mod;
+        i--;
+    }
     ll t;
     cin>>t;
 
     while(t--)
     {
      //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
-    {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
-        {
-            r=mid;
+        int n, k;
+        cin >> n >> k;
+        int count0 = 0;
+        int count1 = 0;
+        i = 0;
+        while (i < n) {
+            int a;
+            cin >> a;
+            if (a == 0) {
+                count0++;
+            } else {
+                count1++;
+            }
+            i++;
         }
-        else
+        long long ans = 0;
+        if (count1 > k / 2) 
         {
-             l=mid+1;
+            i = k / 2 + 1;
+            while (i <= min(k, count1)) 
+            {
+                ans = (ans + C(count0, k - i) * C(count1, i)) % mod;
+                i++;
+            }
         }
-    }
-    cout<<r<<endl;
+        cout<<ans<<endl;
     }
     return 0;
 }

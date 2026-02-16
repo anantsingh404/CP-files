@@ -530,15 +530,7 @@ long long modularInverseFermat(long long a) {
 
 
 //Main Function:
-ll check(ll n, ll m, ll k, ll x)
-{
-    ll sum=n*(m/(x+1)*x+m%(x+1));
-    if(sum>=k)
-    {
-         return 1;
-    }
-    return 0;
-}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -547,25 +539,58 @@ int main() {
     ll t;
     cin>>t;
 
-    while(t--)
+while(t--)
+{
+//write your code here
+int a;
+cin >> a;
+string b = to_string(a);
+int c = b.size();
+
+vector<pair<int,int>> d;
+
+int i = 1;
+while (i <= 10000)
+{
+    int e = c * i - 5;
+    if (e < 1)
     {
-     //write your code here
-    ll n,m,k; 
-    cin>>n>>m>>k;
-    ll l=1,r=1e9;
-    while(l<r)
+        e = 1;
+    }
+
+    int f = c * i;
+
+    int j = e;
+    while (j < f)
     {
-        int mid=(l+r)/2;
-        if(check(n,m,k,mid)==1)
+        int x = a * i - j;
+        int y = 0;
+
+        int k = 0;
+        while (k < c * i - j)
         {
-            r=mid;
+            y = y * 10 + (b[k % c] - '0');
+            k++;
         }
-        else
+
+        if (x == y)
         {
-             l=mid+1;
+            d.push_back({i, j});
         }
+
+        j++;
     }
-    cout<<r<<endl;
-    }
+
+    i++;
+}
+
+cout << d.size() << '\n';
+i = 0;
+while (i < (int)d.size())
+{
+    cout << d[i].first << " " << d[i].second << '\n';
+    i++;
+}
+}
     return 0;
 }

@@ -531,21 +531,19 @@ long long modularInverseFermat(long long a) {
 
 //Main Function:
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
     ll t;
-    cin>>t;
+    cin >> t;
 
-    while(t--)
+    while (t--)
     {
-     //write your code here
        
-
-
-
     }
+
     return 0;
 }

@@ -537,42 +537,107 @@ int main() {
     cin >> t; 
     while (t--) 
     {
-       
-int a,b,c,d;
-cin>>a>>b>>c>>d;
-string x="Gellyfish";
-string y="Flower";
-if(a<d  && b<=c)
-{
-    if(b<=a)
-    {
-        cout<<x<<endl;
-    }
-    else
-    {
-        cout<<y<<endl;
-    }  
-}
-else if(a>=d && b<=c)
-    {
-       cout<<x<<endl;
-    }
-    else if(a<d && b>=c+1)
-    {
-        cout<<y<<endl;
-    }
-    else
-    {
-        if(d<=c)
+      int n;
+        cin >> n;
+
+        vector<ll> x, y;
+        x.resize(n);
+        y.resize(n);
+
+        int i = 0;
+        while (i < n)
         {
-            cout<<x<<endl;
+            cin >> x[i] >> y[i];
+            i++;
         }
-        else
+
+        if (n <= 2)
         {
-            cout<<y<<endl;
+            cout << n << "\n";
+            continue; 
         }
-    }
-    
+
+        vector<ll> sx = x;
+        vector<ll> sy = y;
+
+        sort(sx.begin(), sx.end());
+        sort(sy.begin(), sy.end());
+
+        ll minx1 = sx[0];
+        ll minx2 = sx[1];
+        ll maxx1 = sx[n - 1];
+        ll maxx2 = sx[n - 2];
+
+        ll miny1 = sy[0];
+        ll miny2 = sy[1];
+        ll maxy1 = sy[n - 1];
+        ll maxy2 = sy[n - 2];
+
+        ll ans = LLONG_MAX;
+
+        i = 0;
+        while (i < n)
+        {
+            ll newMinX, newMaxX;
+            ll newMinY, newMaxY;
+
+            if (x[i] == minx1)
+            {
+                newMinX = minx2;
+            }
+            else
+            {
+                newMinX = minx1;
+            }
+
+            if (x[i] == maxx1)
+            {
+                newMaxX = maxx2;
+            }
+            else
+            {
+                newMaxX = maxx1;
+            }
+
+            if (y[i] == miny1)
+            {
+                newMinY = miny2;
+            }
+            else
+            {
+                newMinY = miny1;
+            }
+
+            if (y[i] == maxy1)
+            {
+                newMaxY = maxy2;
+            }
+            else
+            {
+                newMaxY = maxy1;
+            }
+
+            ll width = newMaxX - newMinX + 1;
+            ll height = newMaxY - newMinY + 1;
+
+            ll area = width * height;
+
+            if (area == n - 1)
+            {
+                ll a1 = width * (height + 1);
+                ll a2 = (width + 1) * height;
+                area = min(a1, a2);
+            }
+
+            if (area < ans)
+            {
+                ans = area;
+            }
+
+            i++;
+        }
+
+        cout << ans << "\n"; 
     }
 
     return 0;

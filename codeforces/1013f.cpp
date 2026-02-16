@@ -11,7 +11,7 @@ using namespace std;
 #define sz(v) (int)v.size()
 #define pqmin priority_queue<int, vector<int>, greater<int>>
 #define pqmax priority_queue<int>
-#define mod 1000000007
+#define mod 998244353
 #define fast_io ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 // Constants
@@ -536,16 +536,103 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    ll t;
-    cin>>t;
+ll t;
+cin>>t;
+while(t--)
+{
+//write your code here
+int n, m, d;
+cin >> n >> m >> d;
 
-    while(t--)
-    {
-     //write your code here
-       
+vector<string> g(n);
+int i = 0;
+while (i < n) {
+    cin >> g[i];
+    i++;
+}
 
+reverse(g.begin(), g.end());
 
+vector<vector<int>> dp(n, vector<int>(m, 0));
 
+int j = 0;
+while (j < m) {
+    if (g[0][j] == 'X') {
+        dp[0][j] = 1;
     }
+    j++;
+}
+
+i = 0;
+while (i < n) {
+    vector<int> pf(m, 0), pr(m, 0), tmp(m, 0);
+
+    if (i != 0) {
+        j = 0;
+        while (j < m) {
+            if (j == 0) {
+                pf[j] = dp[i - 1][j];
+            } else {
+                pf[j] = (pf[j - 1] + dp[i - 1][j]) % mod;
+            }
+            j++;
+        }
+
+        int sq = (int)sqrtl(1LL * d * d - 1);
+
+        j = 0;
+        while (j < m) {
+            int l = max(j - sq, 0);
+            int r = min(j + sq, m - 1);
+
+            if (g[i][j] == 'X') {
+                if (l > 0) {
+                    dp[i][j] = (pf[r] - pf[l - 1] + mod) % mod;
+                } else {
+                    dp[i][j] = pf[r] % mod;
+                }
+            }
+            j++;
+        }
+    }
+
+    j = 0;
+    while (j < m) {
+        if (j == 0) {
+            pr[j] = dp[i][j];
+        } else {
+            pr[j] = (pr[j - 1] + dp[i][j]) % mod;
+        }
+        j++;
+    }
+
+    j = 0;
+    while (j < m) {
+        int l = max(j - d, 0);
+        int r = min(j + d, m - 1);
+
+        if (g[i][j] == 'X') {
+            if (l > 0) {
+                tmp[j] = (pr[r] - pr[l - 1] + mod) % mod;
+            } else {
+                tmp[j] = pr[r] % mod;
+            }
+        }
+        j++;
+    }
+
+    dp[i] = tmp;
+    i++;
+}
+
+int ans = 0;
+j = 0;
+while (j < m) {
+    ans = (ans + dp[n - 1][j]) % mod;
+    j++;
+}
+
+cout << ans << endl;
+}
     return 0;
 }
