@@ -27,7 +27,18 @@ public class a1009 {
         {
 
             // ===== YOUR LOGIC HERE =====
-
+            int l=sc.nextInt();
+            int r=sc.nextInt();
+            int d=sc.nextInt();
+            int u=sc.nextInt();
+            if(l==r && r==d && d==u)
+            {
+                System.out.println("Yes");
+            }
+            else
+            {
+                System.out.println("No");
+            }
 
         }
     }

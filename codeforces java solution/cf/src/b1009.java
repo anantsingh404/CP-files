@@ -27,6 +27,27 @@ public class b1009 {
         {
 
             // ===== YOUR LOGIC HERE =====
+            int n=sc.nextInt();
+            int [] arr=new int[n];
+             for(int i=0;i<n;i++)
+             {
+                 arr[i]=sc.nextInt();
+             }
+             Arrays.sort(arr);
+             PriorityQueue< Integer>pq=new PriorityQueue<>();
+             for(int i=0;i<n;i++)
+             {
+                 pq.add(arr[i]);
+             }
+             while(pq.size()>1)
+             {
+                 int x=pq.peek();
+                 pq.poll();
+                 int y=pq.peek();
+                 pq.poll();
+                 pq.add(x+y-1);
+             }
+             System.out.println(pq.peek());
 
 
         }
