@@ -17,18 +17,56 @@ public class e1009 {
     static int[] dx8 = {-1, -1, -1, 0, 0, 1, 1, 1};
     static int[] dy8 = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        Scanner sc = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        Random rand = new Random();
 
-        int t = sc.nextInt();   // test cases
+        int t = Integer.parseInt(br.readLine());
 
         while (t-- > 0)
         {
+            int n = Integer.parseInt(br.readLine());
 
-            // ===== YOUR LOGIC HERE =====
+            int a = 1;
+            int b = 2;
+            int c = 3;
 
+            while (true)
+            {
+                out.println("? " + a + " " + b + " " + c);
+                out.flush();
 
+                int res = Integer.parseInt(br.readLine());
+
+                if (res == -1)
+                {
+                    return;
+                }
+
+                if (res == 0)
+                {
+                    out.println("! " + a + " " + b + " " + c);
+                    out.flush();
+                    break;
+                }
+
+                int idx = rand.nextInt(3);
+
+                if (idx == 0)
+                {
+                    a = res;
+                }
+                else if (idx == 1)
+                {
+                    b = res;
+                }
+                else
+                {
+                    c = res;
+                }
+            }
         }
     }
 }

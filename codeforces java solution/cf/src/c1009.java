@@ -28,7 +28,33 @@ public class c1009 {
 
             // ===== YOUR LOGIC HERE =====
 
+            int x=sc.nextInt();
 
+                int z = 0;
+                for(int i = 31; i >= 0; i--)
+                {
+                    if((x&(1<<i))>0)
+                    {
+                        z = (1<<i);
+                        break;
+                    }
+                }
+
+                for(int i = 0; i <= 31; i++){
+                    if((x & ((int)1<<i)) == 0){
+                        z += ((int)1<<i);
+                        break;
+                    }
+                }
+                int y = x ^ z;
+                if(x + y <= z || x + z <= y || y + z <= x || y >= x)
+                {
+                    System.out.println(-1);
+                }
+                else
+                {
+                    System.out.println(y);
+                }
 
         }
     }
